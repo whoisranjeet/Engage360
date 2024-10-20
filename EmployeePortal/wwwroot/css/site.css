@@ -3,14 +3,13 @@ body {
     background-color: #f4f4f9;
 }
 
-.SignIn-Body {
+.SignInOut-Body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f9;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
+    margin: 60px 0;
 }
 
 .mt-6 {
@@ -48,6 +47,7 @@ label {
     margin-bottom: 5px;
 }
 
+input[type="email"],
 input[type="text"],
 input[type="password"] {
     width: 100%;

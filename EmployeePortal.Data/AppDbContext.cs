@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EmployeePortal.Data
 {
-    public class DataContext : DbContext
+    public class AppDbContext : DbContext
     {
-        public DataContext(DbContextOptions options) : base(options)
+        public AppDbContext(DbContextOptions options) : base(options)
         {
         }
         public DbSet<Employee> Employees { get; set; }

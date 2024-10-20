@@ -1,14 +1,23 @@
+using EmployeePortal;
 using EmployeePortal.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<DataContext>(opt =>
+builder.Services.AddDbContext<AppDbContext>(option =>
 {
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Portal/SignIn";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    });
+builder.Services.AddScoped<DBOperations>();
 
 var app = builder.Build();
 
@@ -20,6 +29,7 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 
@@ -32,7 +42,7 @@ var services = scope.ServiceProvider;
 
 try
 {
-    var context = services.GetRequiredService<DataContext>();
+    var context = services.GetRequiredService<AppDbContext>();
     await context.Database.MigrateAsync();
     await Seed.SeedRoles(context);
     await Seed.SeedEmployees(context);

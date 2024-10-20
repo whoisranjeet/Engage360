@@ -1,4 +1,4 @@
-namespace EmployeePortal.Models
+namespace EmployeePortal.ViewModels
 {
     public class ErrorViewModel
     {

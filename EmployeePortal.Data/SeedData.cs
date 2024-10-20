@@ -9,7 +9,7 @@ namespace EmployeePortal.Data
 {
     public class Seed
     {
-        public static async Task SeedRoles(DataContext context)
+        public static async Task SeedRoles(AppDbContext context)
         {
             if (context.Roles.Any()) return;
 
@@ -25,7 +25,7 @@ namespace EmployeePortal.Data
             await context.SaveChangesAsync();
         }
 
-        public static async Task SeedEmployees(DataContext context)
+        public static async Task SeedEmployees(AppDbContext context)
         {
             if (context.Employees.Any()) return;            
 
