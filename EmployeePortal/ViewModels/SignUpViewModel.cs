@@ -5,7 +5,7 @@ namespace EmployeePortal.ViewModels
     public class SignUpViewModel
     {
         [Required]
-        [Display(Name ="First Name")]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
         [Required]
         [Display(Name = "Last Name")]

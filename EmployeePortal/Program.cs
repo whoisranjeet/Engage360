@@ -22,20 +22,21 @@ builder.Services.AddScoped<DBOperations>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Portal/Error");
-}
-app.UseStaticFiles();
 
+app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapControllerRoute(
+    name: "rootSignIn",
+    pattern: "/",
+    defaults: new { controller = "Portal", action = "SignIn" });
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Portal}/{action=SignIn}/{id?}");
+
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;

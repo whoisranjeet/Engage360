@@ -6,34 +6,34 @@
     <title>@ViewData["Title"]Engage360</title>
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/site.css" rel="stylesheet" />
-    <link rel="icon" type="image/png" href="~/img/favicon.png" />
+    <link rel="icon" type="image/png" href="~/favicon.png" />
 </head>
 <body>
     <!-- Navigation Bar -->
     <header class="fixed-top">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
-                <a class="navbar-brand" href="~/">My Cool Site</a>
+                <a class="navbar-brand" href="#">My Cool Site</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="~/Home">Home</a>
+                            <a class="nav-link" href="/Dashboard">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="~/About">About</a>
+                            <a class="nav-link" href="#">About</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="~/Services">Services</a>
+                            <a class="nav-link" href="/">Contact Us</a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
                                 <a class="nav-link" href="/Portal/SignOut">Sign Out - @User.Identity.Name</a>
                             </li>
-                        }                        
+                        }
                     </ul>
                 </div>
             </div>
@@ -54,8 +54,8 @@
                 </div>
                 <div class="col-md-6 text-md-end">
                     <ul class="list-inline mb-0">
-                        <li class="list-inline-item"><a class="text-white" href="~/Privacy">Privacy Policy</a></li>
-                        <li class="list-inline-item"><a class="text-white" href="~/Terms">Terms of Service</a></li>
+                        <li class="list-inline-item"><a class="text-white" href="#">Privacy Policy</a></li>
+                        <li class="list-inline-item"><a class="text-white" href="#">Terms of Service</a></li>
                     </ul>
                 </div>
             </div>

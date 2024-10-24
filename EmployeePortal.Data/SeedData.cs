@@ -1,9 +1,4 @@
 ﻿using EmployeePortal.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EmployeePortal.Data
 {
@@ -27,10 +22,10 @@ namespace EmployeePortal.Data
 
         public static async Task SeedEmployees(AppDbContext context)
         {
-            if (context.Employees.Any()) return;            
+            if (context.Employees.Any()) return;
 
             var employees = new List<Employee>
-            {            
+            {
                 new() { FirstName = "Ranjeet", LastName = "Karmakar", EmailAddress = "ranjeetkarmakar@outlook.com", MobileNumber = "7304175111", Address = "Nagpur, India", Department = "Admin" },
                 new() { FirstName = "Amit", LastName = "Sharma", EmailAddress = "amit.sharma@gmail.com", MobileNumber = "9876543210", Address = "Mumbai, India", Department = "HR" },
                 new() { FirstName = "Neha", LastName = "Patil", EmailAddress = "neha.patil@outlook.com", MobileNumber = "9123456789", Address = "Pune, India", Department = "Manager" },

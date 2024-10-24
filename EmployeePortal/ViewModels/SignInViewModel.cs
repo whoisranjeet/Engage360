@@ -5,7 +5,7 @@ namespace EmployeePortal.ViewModels
     public class SignInViewModel
     {
         [Required]
-        [Display(Name ="Username/Email")]
+        [Display(Name = "Username/Email")]
         public string Username { get; set; }
         [Required]
         [Display(Name = "Password")]
