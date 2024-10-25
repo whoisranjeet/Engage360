@@ -1,10 +1,10 @@
-﻿using EmployeePortal.Data.Models;
+﻿using EmployeePortal.Core.Models;
 
-namespace EmployeePortal.Data
+namespace EmployeePortal.Data.Data
 {
     public class Seed
     {
-        public static async Task SeedRoles(AppDbContext context)
+        public static async Task SeedRoles(ApplicationDbContext context)
         {
             if (context.Roles.Any()) return;
 
@@ -20,7 +20,7 @@ namespace EmployeePortal.Data
             await context.SaveChangesAsync();
         }
 
-        public static async Task SeedEmployees(AppDbContext context)
+        public static async Task SeedEmployees(ApplicationDbContext context)
         {
             if (context.Employees.Any()) return;
 

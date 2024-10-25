@@ -1,5 +1,5 @@
-﻿namespace EmployeePortal.Data.Models
-{
+﻿namespace EmployeePortal.Core.Models
+{ 
     public class Employee
     {
         public Guid Id { get; set; }

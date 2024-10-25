@@ -1,4 +1,4 @@
-﻿namespace EmployeePortal.Data.Models
+﻿namespace EmployeePortal.Core.Models
 {
     public class User
     {

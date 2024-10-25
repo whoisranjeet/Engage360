@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EmployeePortal.ViewModels
+namespace EmployeePortal.Core.DTOs
 {
-    public class SignInViewModel
+    public class UserDto
     {
         [Required]
         [Display(Name = "Username/Email")]

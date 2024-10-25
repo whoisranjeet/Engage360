@@ -22,6 +22,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\EmployeePortal.Data\EmployeePortal.Data.csproj" />
+		<ProjectReference Include="..\EmployeePortal.Services\EmployeePortal.Services.csproj" />
 	</ItemGroup>
 
 </Project>
