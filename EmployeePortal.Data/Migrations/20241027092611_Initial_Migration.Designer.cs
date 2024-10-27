@@ -4,6 +4,7 @@ using EmployeePortal.Data.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeePortal.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241027092611_Initial_Migration")]
+    partial class Initial_Migration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,25 +25,30 @@ namespace EmployeePortal.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("EmployeePortal.Data.Models.Employee", b =>
+            modelBuilder.Entity("EmployeePortal.Core.Models.Employee", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Department")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmailAddress")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MobileNumber")
@@ -58,13 +66,14 @@ namespace EmployeePortal.Data.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("EmployeePortal.Data.Models.Role", b =>
+            modelBuilder.Entity("EmployeePortal.Core.Models.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("RoleName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -72,19 +81,21 @@ namespace EmployeePortal.Data.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("EmployeePortal.Data.Models.User", b =>
+            modelBuilder.Entity("EmployeePortal.Core.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("RoleId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Username")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -94,30 +105,25 @@ namespace EmployeePortal.Data.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("EmployeePortal.Data.Models.Employee", b =>
+            modelBuilder.Entity("EmployeePortal.Core.Models.Employee", b =>
                 {
-                    b.HasOne("EmployeePortal.Data.Models.User", "User")
+                    b.HasOne("EmployeePortal.Core.Models.User", "User")
                         .WithOne("Employee")
-                        .HasForeignKey("EmployeePortal.Data.Models.Employee", "UserId");
+                        .HasForeignKey("EmployeePortal.Core.Models.Employee", "UserId");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("EmployeePortal.Data.Models.User", b =>
+            modelBuilder.Entity("EmployeePortal.Core.Models.User", b =>
                 {
-                    b.HasOne("EmployeePortal.Data.Models.Role", "Role")
-                        .WithMany("Users")
+                    b.HasOne("EmployeePortal.Core.Models.Role", "Role")
+                        .WithMany()
                         .HasForeignKey("RoleId");
 
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("EmployeePortal.Data.Models.Role", b =>
-                {
-                    b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("EmployeePortal.Data.Models.User", b =>
+            modelBuilder.Entity("EmployeePortal.Core.Models.User", b =>
                 {
                     b.Navigation("Employee");
                 });

@@ -40,7 +40,8 @@ namespace EmployeePortal.Services.Services
                 User = new User
                 {
                     Username = employeeDto.EmailAddress,
-                    Password = employeeDto.Password
+                    Password = employeeDto.Password,
+                    RoleId = GetDefaultRoleId("Associate")
                 }
             };
             if (_employeeRepository.UserSignUp(employee))
@@ -59,9 +60,20 @@ namespace EmployeePortal.Services.Services
                 EmailAddress = employeeDto.EmailAddress,
                 MobileNumber = employeeDto.MobileNumber,
                 Address = employeeDto.Address,
-                Department = employeeDto.Department
+                Department = employeeDto.Department,
+                User = new User
+                {
+                    Username = employeeDto.EmailAddress,
+                    Password = employeeDto.Password,
+                    RoleId = GetDefaultRoleId("Associate")
+                }
             };
             _employeeRepository.AddEmployee(employee);
-        }        
+        } 
+        
+        public Guid GetDefaultRoleId(string defaultRoleName)
+        {            
+            return _employeeRepository.GetDefaultRoleId(defaultRoleName);
+        }
     }
 }

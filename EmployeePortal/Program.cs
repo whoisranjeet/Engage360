@@ -48,8 +48,7 @@ try
 {
     var context = services.GetRequiredService<ApplicationDbContext>();
     await context.Database.MigrateAsync();
-    await Seed.SeedRoles(context);
-    await Seed.SeedEmployees(context);
+    await DataSeeder.SeedRoles(context);
 }
 catch (Exception ex)
 {

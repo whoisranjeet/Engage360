@@ -103,11 +103,13 @@ namespace EmployeePortal.Controllers
                 authProperties);
         }
 
+        [Route("New Employee")]
         public IActionResult AddEmployee()
         {
             return View();
         }
 
+        [Route("New Employee")]
         [HttpPost]
         public IActionResult AddEmployee(EmployeeDto employeeDto)
         {

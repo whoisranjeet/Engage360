@@ -6,6 +6,7 @@ namespace EmployeePortal.Core.Interfaces
     {
         bool UserSignIn(User user);
         bool UserSignUp(Employee employee);
-        void AddEmployee(Employee employee);        
+        void AddEmployee(Employee employee);
+        Guid GetDefaultRoleId(string defaultRoleName);
     }
 }
