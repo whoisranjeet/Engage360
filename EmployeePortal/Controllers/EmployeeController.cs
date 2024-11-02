@@ -116,9 +116,17 @@ namespace EmployeePortal.Controllers
             if (ModelState.IsValid)
             {
                 _employeeService.AddEmployee(employeeDto);
+                TempData["SuccessMessage"] = "Employee Details Added Successfully !!!";
                 return RedirectToAction("Dashboard", "Dashboard");
             }
             return View(employeeDto);
+        }
+
+        [Route("My Organization")]
+        public IActionResult GetAllEmployee()
+        {           
+            var employees = _employeeService.GetAllEmployee();
+            return View(employees);
         }
     }
 }

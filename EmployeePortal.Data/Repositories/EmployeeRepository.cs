@@ -51,5 +51,10 @@ namespace EmployeePortal.Data.Repositories
             }
             return roleId;
         }
+
+        public List<Employee> GetAllEmployee()
+        {
+            return _context.Employees.ToList();
+        }
     }
 }

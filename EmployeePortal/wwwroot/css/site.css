@@ -41,6 +41,10 @@ h2 {
     margin-bottom: 15px;
 }
 
+.new-employee {
+    justify-content: space-evenly;
+}
+
 label {
     display: block;
     font-weight: bold;
@@ -71,6 +75,11 @@ button.login-btn {
 
     button.login-btn:hover {
         background-color: #0056b3;
+    }
+
+    .new-emp {
+        width: 255px !important;
+        border-radius: 5px !important;
     }
 
 .forgot-password {
@@ -133,4 +142,22 @@ button.login-btn {
 
 .social-buttons button:hover {
     opacity: 0.9;
+}
+
+.new-employee-container{
+    padding: 20px 0;
+}
+
+.all-emp {
+    padding: 20px 0 0;
+}
+
+.new-employee-box {
+    background-color: #fff;
+    padding: 20px 70px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 60%;
+    margin: 0 auto;
 }

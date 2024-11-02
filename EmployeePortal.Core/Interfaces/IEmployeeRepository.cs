@@ -8,5 +8,6 @@ namespace EmployeePortal.Core.Interfaces
         bool UserSignUp(Employee employee);
         void AddEmployee(Employee employee);
         Guid GetDefaultRoleId(string defaultRoleName);
+        List<Employee> GetAllEmployee();
     }
 }

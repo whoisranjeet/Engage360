@@ -75,5 +75,25 @@ namespace EmployeePortal.Services.Services
         {            
             return _employeeRepository.GetDefaultRoleId(defaultRoleName);
         }
+
+        public List<EmployeeDto> GetAllEmployee()
+        {
+            var Employees = new List<EmployeeDto>();
+
+            foreach (var employee in _employeeRepository.GetAllEmployee())
+            {
+                Employees.Add(new EmployeeDto
+                {
+                    FirstName = employee.FirstName,
+                    LastName = employee.LastName,
+                    EmailAddress = employee.EmailAddress,
+                    MobileNumber = employee.MobileNumber,
+                    Address = employee.Address,
+                    Department = employee.Department
+                });
+            }
+
+            return Employees;
+        }
     }
 }

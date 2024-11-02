@@ -1,0 +1,21 @@
+﻿@using EmployeePortal.Core.DTOs;
+@model List<EmployeeDto>
+
+<div class="container all-emp">
+    <div class="row">
+        @foreach (var employee in Model)
+        {
+            <div class="col-md-3 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">@employee.FirstName @employee.LastName</h5>
+                        <p class="card-text"><strong>Email:</strong> @employee.EmailAddress</p>
+                        <p class="card-text"><strong>Mobile:</strong> @employee.MobileNumber</p>
+                        <p class="card-text"><strong>Address:</strong> @employee.Address</p>
+                        <p class="card-text"><strong>Department:</strong> @employee.Department</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
