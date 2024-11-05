@@ -10,6 +10,8 @@ namespace EmployeePortal.Core.Models
         [Required]
         public string LastName { get; set; }
         [Required]
+        public string Gender { get; set; }
+        [Required]
         public string EmailAddress { get; set; }
         public string MobileNumber { get; set; }
         [Required]

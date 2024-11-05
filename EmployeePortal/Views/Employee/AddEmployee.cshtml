@@ -1,55 +1,67 @@
 ﻿@model EmployeePortal.Core.DTOs.EmployeeDto
 
-<div class="new-employee-container">
+<div>
     <div class="new-employee-box">
-        <h2>Sign Up</h2>
+        <h2>Add New Employee Details</h2>
         <form method="post" asp-action="AddEmployee">
             @Html.AntiForgeryToken()
-            @if (!ViewData.ModelState.IsValid)
-            {
-                <div class="validation-summary-errors">
-                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                    {
-                        <p>@error.ErrorMessage</p>
-                    }
+            <div class="new-emp-input-box">
+                <div class="new-emp-row">
+                    <div class="input-group">
+                        <label asp-for="FirstName"></label>
+                        <input asp-for="FirstName" type="text" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="input-group">
+                        <label asp-for="EmailAddress"></label>
+                        <input asp-for="EmailAddress" type="email" />
+                        <span asp-validation-for="EmailAddress" class="text-danger"></span>
+                    </div>
+                    <div class="input-group">
+                        <label asp-for="Address"></label>
+                        <input asp-for="Address" type="text" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                    <div class="input-group">
+                        <label asp-for="Department"></label>
+                        <select asp-for="Department" asp-items="ViewBag.Departments" class="department-select">
+                            <option value="">Select Department</option>
+                        </select>
+                        <span asp-validation-for="Department" class="text-danger"></span>
+                    </div>
                 </div>
-            }
-            <div class="input-group">
-                <label asp-for="FirstName"></label>
-                <input asp-for="FirstName" type="text" />
-            </div>
-            <div class="input-group">
-                <label asp-for="LastName"></label>
-                <input asp-for="LastName" type="text" />
-            </div>
-            <div class="input-group">
-                <label asp-for="EmailAddress"></label>
-                <input asp-for="EmailAddress" type="email" />
-            </div>
-            <div class="input-group">
-                <label asp-for="MobileNumber"></label>
-                <input asp-for="MobileNumber" type="text" />
-            </div>
-            <div class="input-group">
-                <label asp-for="Address"></label>
-                <input asp-for="Address" type="text" />
-            </div>
-            <div class="input-group">
-                <label asp-for="Department"></label>
-                <input asp-for="Department" type="text" />
-            </div>
-            <div class="input-group">
-                <label asp-for="Password"></label>
-                <input asp-for="Password" type="text" />
-            </div>
-            <div class="input-group">
-                <label asp-for="ConfirmPassword"></label>
-                <input asp-for="ConfirmPassword" type="text" />
-            </div>
-            <div class="input-group new-employee">
-                <button type="reset" class="login-btn new-emp">Clear</button>
-                <button type="submit" class="login-btn new-emp">Submit</button>                
+                <div class="new-emp-row">
+                    <div class="input-group">
+                        <label asp-for="LastName"></label>
+                        <input asp-for="LastName" type="text" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                    <div class="input-group">
+                        <label asp-for="MobileNumber"></label>
+                        <input asp-for="MobileNumber" type="text" />
+                        <span asp-validation-for="MobileNumber" class="text-danger"></span>
+                    </div>
+                    <div class="input-group">
+                        <label asp-for="Gender"></label>
+                        <select asp-for="Gender" asp-items="ViewBag.Genders" class="department-select">
+                            <option value="">Gender</option>
+                        </select>
+                        <span asp-validation-for="Gender" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>    
+               
+            <div class="new-emp-btns">
+                <button type="reset" class="btn-secondary new-emp-btn">Clear</button>
+                <button type="submit" class="new-emp-btn">Submit</button>
             </div>
         </form>
+
+        @section Scripts {
+            @{
+                await Html.RenderPartialAsync("_ValidationScriptsPartial");
+            }
+        }
+
     </div>
 </div>

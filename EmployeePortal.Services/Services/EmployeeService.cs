@@ -23,7 +23,7 @@ namespace EmployeePortal.Services.Services
             if (_employeeRepository.UserSignIn(user))
             {
                 return true;
-            }                
+            }
             return false;
         }
 
@@ -46,7 +46,7 @@ namespace EmployeePortal.Services.Services
             };
             if (_employeeRepository.UserSignUp(employee))
             {
-                return true ;
+                return true;
             }
             return false;
         }
@@ -69,31 +69,74 @@ namespace EmployeePortal.Services.Services
                 }
             };
             _employeeRepository.AddEmployee(employee);
-        } 
-        
+        }
+
         public Guid GetDefaultRoleId(string defaultRoleName)
-        {            
+        {
             return _employeeRepository.GetDefaultRoleId(defaultRoleName);
         }
 
-        public List<EmployeeDto> GetAllEmployee()
+        public List<EmployeeDto> GetAllEmployees()
         {
-            var Employees = new List<EmployeeDto>();
+            var employees = _employeeRepository.GetAllEmployees();
 
-            foreach (var employee in _employeeRepository.GetAllEmployee())
+            var employeeDtos = employees.Select(employee => new EmployeeDto
             {
-                Employees.Add(new EmployeeDto
-                {
-                    FirstName = employee.FirstName,
-                    LastName = employee.LastName,
-                    EmailAddress = employee.EmailAddress,
-                    MobileNumber = employee.MobileNumber,
-                    Address = employee.Address,
-                    Department = employee.Department
-                });
-            }
+                FirstName = employee.FirstName,
+                LastName = employee.LastName,
+                EmailAddress = employee.EmailAddress,
+                MobileNumber = employee.MobileNumber,
+                Address = employee.Address,
+                Department = employee.Department
+            })
+            .OrderBy(dto => dto.FirstName)
+            .ToList();
 
-            return Employees;
+            return employeeDtos;
+        }
+
+        public List<RoleDto> GetAllRoles()
+        {
+            var roles = _employeeRepository.GetAllRoles();
+
+            var rolesDtos = roles.Select(role => new RoleDto
+            {
+                Id = role.Id,
+                RoleName = role.RoleName
+            }).ToList();
+
+            return rolesDtos;
+        }
+
+        public List<UserDto> GetAllUsers()
+        {
+            var users = _employeeRepository.GetAllUsers();
+
+            var usersDtos = users.Select(user => new UserDto
+            {
+                Username = user.Username,
+                RoleId = user.RoleId
+            }).ToList();
+
+            return usersDtos;
+        }
+
+        public bool ModifyEmployeeRole(string EmailAddress, string RoleName)
+        {
+            if (_employeeRepository.ModifyEmployeeRole(EmailAddress, RoleName))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> RemoveEmployee(string EmailAddress)
+        {
+            if (await _employeeRepository.RemoveEmployee(EmailAddress))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

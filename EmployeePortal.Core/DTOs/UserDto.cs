@@ -10,5 +10,6 @@ namespace EmployeePortal.Core.DTOs
         [Required]
         [Display(Name = "Password")]
         public string Password { get; set; }
+        public Guid? RoleId { get; set; }
     }
 }

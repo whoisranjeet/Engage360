@@ -1,0 +1,183 @@
+﻿@using EmployeePortal.Core.DTOs;
+@model RoleMappingDto
+
+<div class="card">
+    <div class="container role-map-container">
+        <h2>Map Employee Role</h2>
+
+        <div id="initialMessage" class="alert alert-info alert-dismissible fade show" role="alert">
+            Please select an employee from the list or search using a valid name or email address.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Dropdown for selecting employees -->
+        <div class="input-group mb-3 role-map">
+            <label for="employeeSelect">Select Employee:</label>
+            <select id="employeeSelect" class="form-select role-map-select">
+                <option value="">-- Select Employee --</option>
+                @foreach (var employee in Model.Employees)
+                {
+                    <option value="@employee.EmailAddress">@employee.FirstName @employee.LastName (@employee.EmailAddress)</option>
+                }
+            </select>
+        </div>
+
+        <!-- Search box for employee -->
+        <div class="input-group mb-3">
+            <input type="text" id="employeeSearch" class="form-control" placeholder="Search Employee by Name or Email" />
+            <button id="searchButton" class="btn btn-primary">Search</button>
+        </div>
+
+        <!-- Employee Details Card -->
+        <div id="employeeDetails" class="card" style="display: none;">
+            <div class="card-body">
+                <h5 class="card-title" id="employeeName"></h5>
+                <p class="card-text" id="employeeAddress"></p>
+                <p class="card-text" id="employeePhoneNumber"></p>
+                <p class="card-text" id="employeeEmail"></p>
+                <p class="card-text" id="employeeDepartment"></p>
+                <p class="card-text" id="employeeRole"></p>                
+            </div>
+            <div class="input-group mb-3">
+                <label for="roleSelect">Change Role:</label>
+                <select id="roleSelect" class="form-select">
+                    <option value="">-- Select Role --</option>
+                    @foreach (var role in Model.Roles)
+                    {
+                        <option value="@role.RoleName">@role.RoleName</option>
+                    }
+                </select>
+                <button id="submitButton" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+
+        var employees = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Employees));
+        var users = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Users));
+        var roles = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Roles));
+
+        $(document).ready(function () {
+            // Load employee details on selection from dropdown
+            $('#employeeSelect').change(function () {
+                var selectedEmployee = $(this).val();
+
+                // Reset the search box when selecting from dropdown
+                $('#employeeSearch').val('');
+
+                var employeeDetail = employees.find(emp => emp.EmailAddress === selectedEmployee);
+
+                if (employeeDetail === undefined) {
+                    $('#employeeDetails').hide();
+                    $('#initialMessage').show();
+                } else {
+                    var userDetail = users.find(user => user.Username === selectedEmployee);
+                    var roleDetail = userDetail ? roles.find(role => role.Id === userDetail.RoleId) : null;
+
+                    $('#initialMessage').hide(); // Hide the initial message
+                    $('#employeeName').text(employeeDetail.FirstName);
+                    $('#employeeAddress').text(employeeDetail.Address);
+                    $('#employeePhoneNumber').text(employeeDetail.MobileNumber);
+                    $('#employeeEmail').text(employeeDetail.EmailAddress);
+                    $('#employeeDepartment').text(employeeDetail.Department);
+                    $('#employeeRole').text(roleDetail ? roleDetail.RoleName : "Role not assigned");
+                    $('#employeeDetails').show();
+                }
+            });
+
+            // Function to perform the search
+            function performSearch() {
+                var searchTerm = $('#employeeSearch').val().trim().toLowerCase(); // Trim to remove extra spaces
+                if (searchTerm === '') {
+                    alert("Please enter a name or email address to search."); // Alert if the search box is empty
+                    return; // Exit the function if empty
+                }
+
+                // Reset dropdown when using search
+                $('#employeeSelect').val('');
+
+                var suggestions = employees.filter(emp => emp.FirstName.toLowerCase().includes(searchTerm) || emp.EmailAddress.toLowerCase().includes(searchTerm));
+
+                if (suggestions.length > 0) {
+                    var suggestion = suggestions[0]; // Taking the first suggestion
+
+                    // Find the corresponding user and role details
+                    var userDetail = users.find(user => user.Username === suggestion.EmailAddress);
+                    var roleDetail = userDetail ? roles.find(role => role.Id === userDetail.RoleId) : null;
+
+                    $('#initialMessage').hide(); // Hide the initial message
+                    $('#employeeName').text(suggestion.FirstName);
+                    $('#employeeAddress').text(suggestion.Address);
+                    $('#employeePhoneNumber').text(suggestion.MobileNumber);
+                    $('#employeeEmail').text(suggestion.EmailAddress);
+                    $('#employeeDepartment').text(suggestion.Department);
+                    $('#employeeRole').text(roleDetail ? roleDetail.RoleName : "Role not assigned");
+                    $('#employeeDetails').show();
+                } else {
+                    $('#employeeDetails').hide();
+                    $('#initialMessage').show();
+                    alert("No results found for the given search term. Please try again."); // Alert for no results
+                }
+            }
+
+            // Listen for button click
+            $('#searchButton').click(function () {
+                performSearch();
+            });
+
+            // Listen for Enter key press in the search box
+            $('#employeeSearch').keydown(function (event) {
+                if (event.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            // Reset employee details when search box is cleared
+            $('#employeeSearch').on('input', function () {
+                if ($(this).val() === '') {
+                    $('#employeeDetails').hide();
+                    $('#employeeSelect').val(''); // Reset dropdown selection
+                    $('#initialMessage').show(); // Show the initial message again
+                }
+            });
+
+            $('#submitButton').click(function () {
+                var selectedEmail = $('#employeeEmail').text(); // Get the selected employee's email address
+                var selectedRole = $('#roleSelect').val(); // Get the selected role name
+
+                if (selectedEmail === '' || selectedRole === '') {
+                    alert("Please select both an employee and a role before submitting.");
+                    return;
+                }
+
+                $.ajax({
+                    url: '/Modify-Role', // Replace 'YourController' with your actual controller name
+                    type: 'POST',
+                    data: JSON.stringify({ EmailAddress: selectedEmail, RoleName: selectedRole }),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        if (response.success) {
+                            // Update the role text in the employee details section
+                            $('#employeeRole').text(selectedRole);
+                            alert("Role updated successfully.");
+
+                            // Optionally, reset the dropdown or update UI elements as needed
+                            $('#roleSelect').val(''); // Reset role selection after updating
+                        } else {
+                            alert("Failed to update role. " + response.message);
+                        }
+                    },
+                    error: function () {
+                        alert("An error occurred while updating the role.");
+                    }
+                });
+            });
+        });
+
+    </script>
+}

@@ -8,6 +8,10 @@ namespace EmployeePortal.Core.Interfaces
         bool UserSignUp(EmployeeDto employeeDto);
         void AddEmployee(EmployeeDto employeeDto);
         Guid GetDefaultRoleId(string defaultRoleName);
-        List<EmployeeDto> GetAllEmployee();
+        List<EmployeeDto> GetAllEmployees();
+        List<RoleDto> GetAllRoles();
+        List<UserDto> GetAllUsers();
+        bool ModifyEmployeeRole(string EmailAddress, string RoleName);
+        Task<bool> RemoveEmployee(string EmailAddress);
     }
 }

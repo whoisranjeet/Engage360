@@ -13,7 +13,8 @@ body {
 }
 
 .mt-6 {
-    margin-top: 56px;
+    min-height: calc(100vh - 56px - 56px);
+    padding: 20px 0;
 }
 
 .login-container {
@@ -41,10 +42,6 @@ h2 {
     margin-bottom: 15px;
 }
 
-.new-employee {
-    justify-content: space-evenly;
-}
-
 label {
     display: block;
     font-weight: bold;
@@ -53,12 +50,17 @@ label {
 
 input[type="email"],
 input[type="text"],
-input[type="password"] {
+input[type="password"],
+select {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+}
+
+.department-select {
+    height: 46px;
 }
 
 button.login-btn {
@@ -75,11 +77,6 @@ button.login-btn {
 
     button.login-btn:hover {
         background-color: #0056b3;
-    }
-
-    .new-emp {
-        width: 255px !important;
-        border-radius: 5px !important;
     }
 
 .forgot-password {
@@ -144,20 +141,60 @@ button.login-btn {
     opacity: 0.9;
 }
 
-.new-employee-container{
-    padding: 20px 0;
-}
-
-.all-emp {
-    padding: 20px 0 0;
-}
-
 .new-employee-box {
     background-color: #fff;
-    padding: 20px 70px;
+    padding: 1rem 1rem;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 60%;
     margin: 0 auto;
+}
+
+.new-emp-input-box {
+    display: flex;
+    gap: 25px;
+}
+
+.new-emp-row {
+    width: 50%;
+}
+
+.new-emp-btns {
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+}
+
+button.new-emp-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+    button.new-emp-btn:hover {
+        background-color: #0056b3;
+    }
+
+.role-map {
+    align-items: center;
+    gap: 10px;
+}
+
+.role-map-select {
+    height: 45.6px;
+}
+
+.role-map-container {
+    padding: 20px;
+}
+
+.remove-btn {
+    margin-top: 10px;
+    width: 100%;
 }

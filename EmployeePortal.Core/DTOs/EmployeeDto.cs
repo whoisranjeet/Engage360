@@ -13,6 +13,9 @@ namespace EmployeePortal.Core.DTOs
         [DisplayName("Last Name")]
         public string LastName { get; set; }
         [Required]
+        [DisplayName("Gender")]
+        public string Gender { get; set; }
+        [Required]
         [DisplayName("Email")]
         public string EmailAddress { get; set; }
         [DisplayName("Mobile")]

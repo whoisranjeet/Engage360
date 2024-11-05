@@ -44,12 +44,21 @@
                     <input asp-for="MobileNumber" type="text" />
                 </div>
                 <div class="input-group">
+                    <label asp-for="Gender"></label>
+                    <select asp-for="Gender" asp-items="ViewBag.Genders" class="department-select">
+                        <option value="">Gender</option>
+                    </select>
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </div>
+                <div class="input-group">
                     <label asp-for="Address"></label>
                     <input asp-for="Address" type="text" />
                 </div>
                 <div class="input-group">
                     <label asp-for="Department"></label>
-                    <input asp-for="Department" type="text" />
+                    <select asp-for="Department" asp-items="ViewBag.Departments">
+                        <option value="">Select Department</option>
+                    </select>
                 </div>
                 <div class="input-group">
                     <label asp-for="Password"></label>
