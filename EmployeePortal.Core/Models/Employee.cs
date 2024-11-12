@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace EmployeePortal.Core.Models
-{ 
+{
     public class Employee
     {
         public Guid Id { get; set; }
@@ -11,6 +11,7 @@ namespace EmployeePortal.Core.Models
         public string LastName { get; set; }
         [Required]
         public string Gender { get; set; }
+        public byte[] ProfilePicture { get; set; }
         [Required]
         public string EmailAddress { get; set; }
         public string MobileNumber { get; set; }
@@ -18,7 +19,7 @@ namespace EmployeePortal.Core.Models
         public string Address { get; set; }
         [Required]
         public string Department { get; set; }
-        
+        public long Salary { get; set; }
         public Guid? UserId { get; set; }
         public virtual User User { get; set; }
     }

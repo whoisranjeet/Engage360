@@ -15,6 +15,7 @@ namespace EmployeePortal.Core.DTOs
         [Required]
         [DisplayName("Gender")]
         public string Gender { get; set; }
+        public byte[] ProfilePicture { get; set; }
         [Required]
         [DisplayName("Email")]
         public string EmailAddress { get; set; }
@@ -24,6 +25,7 @@ namespace EmployeePortal.Core.DTOs
         [Required]
         [DisplayName("Department")]
         public string Department { get; set; }
+        public long Salary { get; set; }
         [Required]
         [DisplayName("Password")]
         public string Password { get; set; }

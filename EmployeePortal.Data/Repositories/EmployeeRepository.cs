@@ -4,6 +4,8 @@ using EmployeePortal.Data.Data;
 using Microsoft.Extensions.Logging;
 using System.Data;
 using Microsoft.EntityFrameworkCore;
+using EmployeePortal.Core.DTOs;
+using System.Net.Mail;
 
 namespace EmployeePortal.Data.Repositories
 {
@@ -88,7 +90,7 @@ namespace EmployeePortal.Data.Repositories
             {
                 _logger.LogError(ex, "An error ocuured during modifying user role.");
                 return false;
-            }            
+            }
         }
 
         public async Task<bool> RemoveEmployee(string EmailAddress)
@@ -97,10 +99,10 @@ namespace EmployeePortal.Data.Repositories
             {
                 var employee = await _context.Employees.FirstOrDefaultAsync(emp => emp.EmailAddress == EmailAddress);
                 var user = _context.Users.FirstOrDefault(user => user.Username == EmailAddress);
-                if (employee != null && user != null) 
+                if (employee != null && user != null)
                 {
                     _context.Employees.Remove(employee);
-                    _context.Users.Remove(user);                    
+                    _context.Users.Remove(user);
                 }
                 await _context.SaveChangesAsync();
                 return true;
@@ -108,6 +110,49 @@ namespace EmployeePortal.Data.Repositories
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error ocuured during removing employee details.");
+                return false;
+            }
+        }
+
+        public Employee GetEmployeeDetails(string emailAddress)
+        {
+            var employee = _context.Employees.FirstOrDefault(emp => emp.EmailAddress == emailAddress);
+            
+            if (employee != null)
+            {
+                return employee;
+            }
+
+            return new Employee { };
+        }
+
+        public bool UpdateEmployeeDetails(Employee emp, string emailAddress)
+        {
+            try
+            {
+                var employee = _context.Employees.FirstOrDefault(emp => emp.EmailAddress == emailAddress);
+                
+                employee.FirstName = emp.FirstName;
+                employee.LastName = emp.LastName;
+                employee.MobileNumber = emp.MobileNumber;
+                employee.Address = emp.Address;
+                employee.Department = emp.Department;
+                employee.Gender = emp.Gender;                
+                employee.Salary = emp.Salary;
+
+                if (emp.ProfilePicture != null)
+                {
+                    employee.ProfilePicture = emp.ProfilePicture;
+                }                    
+
+                _context.Employees.Update(employee);
+                _context.SaveChanges();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error ocuured during modifying user role.");
                 return false;
             }
         }

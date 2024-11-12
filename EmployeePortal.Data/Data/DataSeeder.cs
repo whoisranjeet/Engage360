@@ -6,7 +6,7 @@ namespace EmployeePortal.Data.Data
     {
         public static async Task SeedRoles(ApplicationDbContext context)
         {
-            if (context.Roles.Any()) return;            
+            if (context.Roles.Any()) return;
 
             var roles = new List<Role>
             {

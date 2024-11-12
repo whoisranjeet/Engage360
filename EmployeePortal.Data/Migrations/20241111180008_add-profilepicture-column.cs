@@ -5,15 +5,15 @@
 namespace EmployeePortal.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdatingEmployee : Migration
+    public partial class addprofilepicturecolumn : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Gender",
+            migrationBuilder.AddColumn<byte[]>(
+                name: "ProfilePicture",
                 table: "Employees",
-                type: "nvarchar(max)",
+                type: "varbinary(max)",
                 nullable: true);
         }
 
@@ -21,7 +21,7 @@ namespace EmployeePortal.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Gender",
+                name: "ProfilePicture",
                 table: "Employees");
         }
     }

@@ -16,7 +16,7 @@
     <div class="login-container">
         <div class="login-box">
             <h2>Sign Up</h2>
-            <form method="post" asp-action="UserSignUp">
+            <form method="post" asp-action="UserSignUp" enctype="multipart/form-data">
                 @Html.AntiForgeryToken()
                 @if (!ViewData.ModelState.IsValid)
                 {
@@ -34,6 +34,10 @@
                 <div class="input-group">
                     <label asp-for="LastName"></label>
                     <input asp-for="LastName" type="text" />
+                </div>
+                <div class="input-group">
+                    <label asp-for="ProfilePicture"></label>
+                    <input type="file" name="imageUpload" accept="image/*" class="form-control w-100">
                 </div>
                 <div class="input-group">
                     <label asp-for="EmailAddress"></label>
@@ -81,3 +85,13 @@
     <script src="~/js/site.js"></script>
 </body>
 </html>
+
+<style>
+    input[type="file"]::file-selector-button {
+        background-color: #00000030;
+        color: white;
+        padding: 5px;
+        border: none;
+        border-radius: 3px;
+    }
+</style>

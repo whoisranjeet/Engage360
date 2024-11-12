@@ -4,6 +4,7 @@ using EmployeePortal.Data.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeePortal.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241107125003_initial-migration")]
+    partial class initialmigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,12 +57,6 @@ namespace EmployeePortal.Data.Migrations
 
                     b.Property<string>("MobileNumber")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("ProfilePicture")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<long>("Salary")
-                        .HasColumnType("bigint");
 
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -112,62 +109,6 @@ namespace EmployeePortal.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
-                });
-
-            modelBuilder.Entity("EmployeePortal.Core.Models.Salary", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long>("Basic")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("EmployeeEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("HRA")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("MiscellaneousCredit")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("MiscellaneousDebit")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("NetSalary")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("PF")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("PT")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("PayrollDate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProcessedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Remarks")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("ShiftAllowance")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("TotalDeduction")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("TotalEarning")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("TravelAllowance")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Salaries");
                 });
 
             modelBuilder.Entity("EmployeePortal.Core.Models.User", b =>

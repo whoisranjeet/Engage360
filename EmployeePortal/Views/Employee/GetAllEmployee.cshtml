@@ -1,21 +1,82 @@
-﻿@using EmployeePortal.Core.DTOs;
+﻿@using EmployeePortal.Core.DTOs
 @model List<EmployeeDto>
 
-<div>
-    <div class="row">
-        @foreach (var employee in Model)
-        {
-            <div class="col-md-3 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">@employee.FirstName @employee.LastName</h5>
-                        <p class="card-text"><strong>Email:</strong> @employee.EmailAddress</p>
-                        <p class="card-text"><strong>Mobile:</strong> @employee.MobileNumber</p>
-                        <p class="card-text"><strong>Address:</strong> @employee.Address</p>
-                        <p class="card-text"><strong>Department:</strong> @employee.Department</p>
-                    </div>
+<div class="employee-card-container w-100">
+    @foreach (var employee in Model)
+    {
+        <div class="employee-card">
+            <div class="card shadow-lg h-100 text-center">
+                <!-- Profile Picture -->
+
+                @if (employee.ProfilePicture != null && employee.ProfilePicture.Length > 0)
+                {
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(employee.ProfilePicture)"
+                         class="card-img-top rounded-circle mt-4 mx-auto"
+                         alt="Profile Picture"
+                    style="width: 100px; height: 100px; object-fit: cover;">
+                }
+                else
+                {
+                    <img src="~/img/@(employee.Gender == "Male" ? "male.jpg" : employee.Gender == "Female" ? "female.jpg" : "other.jpg")"
+                         class="card-img-top rounded-circle mt-4 mx-auto"
+                         alt="Profile Picture"
+                         style="width: 100px; height: 100px; object-fit: cover;">
+                }                
+
+                <div class="card-body">
+                    <h5 class="card-title font-weight-bold text-primary">
+                        @employee.FirstName @employee.LastName
+                    </h5>
+                    <p class="card-text mb-1"><strong>Email:</strong> @employee.EmailAddress</p>
+                    <p class="card-text mb-1"><strong>Mobile:</strong> @employee.MobileNumber</p>
+                    <p class="card-text mb-1"><strong>Address:</strong> @employee.Address</p>
+                    <p class="card-text mb-1"><strong>Department:</strong> @employee.Department</p>
+                </div>
+
+                <!-- Optional Footer -->
+                <div class="card-footer bg-light border-top-0">
+                    <button class="btn btn-outline-primary btn-sm" onclick="showComingSoonPopup()">View Profile</button>
                 </div>
             </div>
-        }
-    </div>
+        </div>
+    }
 </div>
+
+<!-- CSS Styling for a modern touch -->
+<style>
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+    .card-title {
+        font-size: 1.2rem;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+    .card-footer button {
+        width: 100%;
+        font-size: 0.9rem;
+        font-weight: bold;
+    }
+
+    .employee-card {
+        width: 100%;
+    }
+
+    .employee-card-container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 25px;
+    }
+</style>

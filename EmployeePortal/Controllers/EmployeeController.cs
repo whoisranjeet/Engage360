@@ -6,17 +6,22 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Net.Mail;
+using EmployeePortal.Services.Services;
+using EmployeePortal.ViewModel;
 
 namespace EmployeePortal.Controllers
 {
     public class EmployeeController : Controller
     {
         private readonly IEmployeeService _employeeService;
+        private readonly IEmailService _emailService;
+        private readonly IPortalHelper _portalHelper;
 
-        public EmployeeController(IEmployeeService employeeService)
+        public EmployeeController(IEmployeeService employeeService, IEmailService emailService, IPortalHelper portalHelper)
         {
             _employeeService = employeeService;
+            _emailService = emailService;
+            _portalHelper = portalHelper;
         }
 
         [HttpGet]
@@ -57,22 +62,8 @@ namespace EmployeePortal.Controllers
         [AllowAnonymous]
         public IActionResult UserSignUp()
         {
-            ViewBag.Departments = new SelectList(new List<string>
-            {
-                "HR",
-                "Finance",
-                "Engineering",
-                "Marketing",
-                "Management",
-                "Other"
-            });
-
-            ViewBag.Genders = new SelectList(new List<string>
-            {
-                "Male",
-                "Female",
-                "Other"
-            });
+            ViewBag.Departments = new SelectList(_portalHelper.GetAllDepartment());
+            ViewBag.Genders = new SelectList(_portalHelper.GetAllGender());
 
             return View();
         }
@@ -80,8 +71,19 @@ namespace EmployeePortal.Controllers
         [Route("SignUp")]
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult UserSignUp(EmployeeDto employeeDto)
+        public IActionResult UserSignUp(EmployeeDto employeeDto, IFormFile imageUpload)
         {
+            ModelState.Remove(nameof(employeeDto.ProfilePicture));
+
+            if (imageUpload != null && imageUpload.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    imageUpload.CopyToAsync(memoryStream);
+                    employeeDto.ProfilePicture = memoryStream.ToArray();
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 if (_employeeService.UserSignUp(employeeDto))
@@ -99,22 +101,8 @@ namespace EmployeePortal.Controllers
                 }
             }
 
-            ViewBag.Departments = new SelectList(new List<string>
-            {
-                "HR",
-                "Finance",
-                "Engineering",
-                "Marketing",
-                "Management",
-                "Other"
-            });
-
-            ViewBag.Genders = new SelectList(new List<string>
-            {
-                "Male",
-                "Female",
-                "Other"
-            });
+            ViewBag.Departments = new SelectList(_portalHelper.GetAllDepartment());
+            ViewBag.Genders = new SelectList(_portalHelper.GetAllGender());
 
             return View(employeeDto);
         }
@@ -147,60 +135,45 @@ namespace EmployeePortal.Controllers
         [Route("New-Employee")]
         public IActionResult AddEmployee()
         {
-            ViewBag.Departments = new SelectList(new List<string>
-            {
-                "HR",
-                "Finance",
-                "Engineering",
-                "Marketing",
-                "Management",
-                "Other"
-            });
-
-            ViewBag.Genders = new SelectList(new List<string>
-            {
-                "Male",
-                "Female",
-                "Other"
-            });
+            ViewBag.Departments = new SelectList(_portalHelper.GetAllDepartment());
+            ViewBag.Genders = new SelectList(_portalHelper.GetAllGender());
 
             return View();
         }
 
         [Route("New-Employee")]
         [HttpPost]
-        public IActionResult AddEmployee(EmployeeDto employeeDto)
+        public IActionResult AddEmployee(EmployeeDto employeeDto, IFormFile imageUpload)
         {
+            if (imageUpload != null && imageUpload.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    imageUpload.CopyToAsync(memoryStream);
+                    employeeDto.ProfilePicture = memoryStream.ToArray();
+                }
+            }
+
             var generatedPassword = GeneratePassword(employeeDto.LastName);
             employeeDto.Password = generatedPassword;
             employeeDto.ConfirmPassword = generatedPassword;
 
             ModelState.Remove(nameof(employeeDto.Password));
             ModelState.Remove(nameof(employeeDto.ConfirmPassword));
+            ModelState.Remove(nameof(employeeDto.ProfilePicture));
 
             if (ModelState.IsValid)
             {
                 _employeeService.AddEmployee(employeeDto);
+                string emailBody = string.Format("Your account has been set up in our system.\nLogin Details:\nUsername: {0}\nPassword: {1}", employeeDto.EmailAddress, generatedPassword);
+                _emailService.SendEmailUsingGmail(employeeDto.EmailAddress, "Your account has been setup. : Engage360", emailBody);
+
                 TempData["SuccessMessage"] = "Employee Details Added Successfully !!!";
                 return RedirectToAction("Dashboard", "Dashboard");
             }
 
-            ViewBag.Departments = new SelectList(new List<string>
-            {
-                "HR",
-                "Finance",
-                "Engineering",
-                "Marketing",
-                "Management",
-                "Other"
-            });
-
-            ViewBag.Genders = new SelectList(new List<string>
-            {
-                "Male",
-                "Female",
-                "Other"
-            });
+            ViewBag.Departments = new SelectList(_portalHelper.GetAllDepartment());
+            ViewBag.Genders = new SelectList(_portalHelper.GetAllGender());
 
             return View(employeeDto);
         }
@@ -272,6 +245,54 @@ namespace EmployeePortal.Controllers
                 }
             }
             return Json(new { success = false });
+        }
+
+
+        [Route("Update-Employee")]
+        public IActionResult UpdateEmployee()
+        {
+            var model = new UpdateEmployeeViewModel
+            {
+                Employees = _employeeService.GetAllEmployees(),
+                SelectedEmployee = new EmployeeDto()
+            };
+
+            ViewBag.Departments = new SelectList(_portalHelper.GetAllDepartment());
+            ViewBag.Genders = new SelectList(_portalHelper.GetAllGender());
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Route("Update-Employee")]
+        public IActionResult UpdateEmployee(UpdateEmployeeViewModel model, IFormFile imageUpload, string emailAddress)
+        {
+            model.SelectedEmployee.EmailAddress = emailAddress;
+
+            if (imageUpload != null && imageUpload.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    imageUpload.CopyToAsync(memoryStream);
+                    model.SelectedEmployee.ProfilePicture = memoryStream.ToArray();
+                }
+            }
+
+            if (_employeeService.UpdateEmployeeDetails(model.SelectedEmployee, emailAddress))
+            {
+                return RedirectToAction("Dashboard", "Dashboard");
+            }
+
+            var viewModel = new UpdateEmployeeViewModel
+            {
+                Employees = _employeeService.GetAllEmployees(),
+                SelectedEmployee = model.SelectedEmployee
+            };
+
+            ViewBag.Departments = new SelectList(_portalHelper.GetAllDepartment());
+            ViewBag.Genders = new SelectList(_portalHelper.GetAllGender());
+
+            return View(viewModel);
         }
     }
 }

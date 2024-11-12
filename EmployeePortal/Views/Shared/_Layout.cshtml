@@ -7,6 +7,7 @@
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/site.css" rel="stylesheet" />
     <link rel="icon" type="image/png" href="~/favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.3/jquery.validate.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate.unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
@@ -40,10 +41,14 @@
                                     <li><a class="dropdown-item" href="/Modify-Role">Map Employee Role</a></li>
                                 </ul>
                             </li>
-                        }                        
+                        }
 
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Contact Us</a>
+                            <a class="nav-link" href="/Payroll">Payroll</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Contact Us">Contact Us</a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
@@ -60,6 +65,15 @@
     <!-- Main Content -->
     <div class="container mt-6">
         @RenderBody()
+    </div>
+
+    <!-- Coming Soon Popup -->
+    <div id="comingSoonPopup" class="coming-soon-popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closePopup()">&times;</span>
+            <h2>Feature Coming Soon!</h2>
+            <p>This feature is currently in development. Stay tuned for updates!</p>
+        </div>
     </div>
 
     <!-- Footer -->

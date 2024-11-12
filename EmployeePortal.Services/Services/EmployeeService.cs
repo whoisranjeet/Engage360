@@ -33,7 +33,9 @@ namespace EmployeePortal.Services.Services
             {
                 FirstName = employeeDto.FirstName,
                 LastName = employeeDto.LastName,
+                ProfilePicture = employeeDto.ProfilePicture,
                 EmailAddress = employeeDto.EmailAddress,
+                Gender = employeeDto.Gender,
                 MobileNumber = employeeDto.MobileNumber,
                 Address = employeeDto.Address,
                 Department = employeeDto.Department,
@@ -57,7 +59,9 @@ namespace EmployeePortal.Services.Services
             {
                 FirstName = employeeDto.FirstName,
                 LastName = employeeDto.LastName,
+                ProfilePicture = employeeDto.ProfilePicture,
                 EmailAddress = employeeDto.EmailAddress,
+                Gender = employeeDto.Gender,
                 MobileNumber = employeeDto.MobileNumber,
                 Address = employeeDto.Address,
                 Department = employeeDto.Department,
@@ -84,10 +88,13 @@ namespace EmployeePortal.Services.Services
             {
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
+                ProfilePicture = employee.ProfilePicture,
                 EmailAddress = employee.EmailAddress,
+                Gender = employee.Gender,
                 MobileNumber = employee.MobileNumber,
                 Address = employee.Address,
-                Department = employee.Department
+                Department = employee.Department,
+                Salary = employee.Salary
             })
             .OrderBy(dto => dto.FirstName)
             .ToList();
@@ -136,6 +143,47 @@ namespace EmployeePortal.Services.Services
             {
                 return true;
             }
+            return false;
+        }
+
+        public EmployeeDto GetEmployeeDetails(string EmailAddress)
+        {
+            var employee = _employeeRepository.GetEmployeeDetails(EmailAddress);
+            var employeeDto = new EmployeeDto
+            {
+                FirstName = employee.FirstName,
+                LastName = employee.LastName,
+                ProfilePicture = employee.ProfilePicture,
+                EmailAddress = employee.EmailAddress,
+                Gender = employee.Gender,
+                MobileNumber = employee.MobileNumber,
+                Department = employee.Department,
+                Address = employee.Address
+            };
+
+            return employeeDto;
+        }
+
+        public bool UpdateEmployeeDetails(EmployeeDto emp, string emailAddress)
+        {
+            var employee = new Employee
+            {
+                FirstName = emp.FirstName,
+                LastName = emp.LastName,
+                ProfilePicture = emp.ProfilePicture,
+                EmailAddress = emp.EmailAddress,
+                Gender = emp.Gender,
+                MobileNumber = emp.MobileNumber,
+                Department = emp.Department,
+                Address = emp.Address,
+                Salary = emp.Salary
+            };
+
+            if (_employeeRepository.UpdateEmployeeDetails(employee, emailAddress))
+            {
+                return true;
+            }
+
             return false;
         }
     }

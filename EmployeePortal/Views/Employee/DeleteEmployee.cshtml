@@ -1,46 +1,48 @@
 ﻿@using EmployeePortal.Core.DTOs;
 @model List<EmployeeDto>
 
-<div class="card">
-    <div class="container role-map-container">
-        <h2>Remove Employee Details</h2>
+<div class="inner-container">
+    <div class="card w-75">
+        <div class="container role-map-container">
+            <h2>Remove Employee Details</h2>
 
-        <div id="initialMessage" class="alert alert-info alert-dismissible fade show" role="alert">
-            Please select an employee from the list or search using a valid name or email address.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-
-        <!-- Dropdown for selecting employees -->
-        <div class="input-group mb-3 role-map">
-            <label for="employeeSelect">Select Employee:</label>
-            <select id="employeeSelect" class="form-select role-map-select">
-                <option value="">-- Select Employee --</option>
-                @foreach (var employee in Model)
-                {
-                    <option value="@employee.EmailAddress">@employee.FirstName @employee.LastName (@employee.EmailAddress)</option>
-                }
-            </select>
-        </div>
-
-        <!-- Search box for employee -->
-        <div class="input-group mb-3">
-            <input type="text" id="employeeSearch" class="form-control" placeholder="Search Employee by Name or Email" />
-            <button id="searchButton" class="btn btn-primary">Search</button>
-        </div>
-
-        <!-- Employee Details Card -->
-        <div id="employeeDetails" style="display: none;">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title" id="employeeName"></h5>
-                    <p class="card-text" id="employeeAddress"></p>
-                    <p class="card-text" id="employeePhoneNumber"></p>
-                    <p class="card-text" id="employeeEmail"></p>
-                    <p class="card-text" id="employeeDepartment"></p>
-                </div>
+            <div id="initialMessage" class="alert alert-info alert-dismissible fade show" role="alert">
+                Please select an employee from the list or search using a valid name or email address.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <button type="submit" id="deleteButton" class="btn btn-danger remove-btn">Remove</button>
-        </div>        
+
+            <!-- Dropdown for selecting employees -->
+            <div class="input-group role-map">
+                <label for="employeeSelect">Select Employee:</label>
+                <select id="employeeSelect" class="form-select role-map-select">
+                    <option value="">-- Select Employee --</option>
+                    @foreach (var employee in Model)
+                    {
+                        <option value="@employee.EmailAddress">@employee.FirstName @employee.LastName (@employee.EmailAddress)</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Search box for employee -->
+            <div class="input-group">
+                <input type="text" id="employeeSearch" class="form-control" placeholder="Search Employee by Name or Email" />
+                <button id="searchButton" class="btn btn-primary role-modify-submit">Search</button>
+            </div>
+
+            <!-- Employee Details Card -->
+            <div id="employeeDetails" style="display: none;">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" id="employeeName"></h5>
+                        <p class="card-text" id="employeeAddress"></p>
+                        <p class="card-text" id="employeePhoneNumber"></p>
+                        <p class="card-text" id="employeeEmail"></p>
+                        <p class="card-text" id="employeeDepartment"></p>
+                    </div>
+                </div>
+                <button type="submit" id="deleteButton" class="btn btn-danger remove-btn">Remove</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -51,7 +53,7 @@
 
         var employees = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
 
-        $(document).ready(function () {            
+        $(document).ready(function () {
 
             // Load employee details on selection from dropdown
             $('#employeeSelect').change(function () {
@@ -139,7 +141,7 @@
                 $.ajax({
                     url: '/Delete-Employee', // Replace 'YourController' with your actual controller name
                     type: 'POST',
-                    data: JSON.stringify({ EmailAddress: selectedEmail}),
+                    data: JSON.stringify({ EmailAddress: selectedEmail }),
                     contentType: 'application/json; charset=utf-8',
                     success: function (response) {
                         if (response.success) {

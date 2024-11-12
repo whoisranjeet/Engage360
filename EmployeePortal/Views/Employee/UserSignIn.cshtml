@@ -36,7 +36,7 @@
                     <input asp-for="Password" type="password" id="password" required />
                 </div>
                 <div class="forgot-password">
-                    <a href="/Account/ForgotPassword">Forgot Password?</a>
+                    <a onclick="showComingSoonPopup()">Forgot Password?</a>
                 </div>
                 <div class="input-group">
                     <button type="submit" class="login-btn">Sign In</button>
@@ -50,11 +50,20 @@
             <div class="social-login">
                 <h3>Or Sign In with</h3>
                 <div class="social-buttons">
-                    <button type="button" class="btn-facebook">Facebook</button>
-                    <button type="button" class="btn-google">Google</button>
-                    <button type="button" class="btn-twitter">Twitter</button>
+                    <button type="button" onclick="showComingSoonPopup()" class="btn-facebook">Facebook</button>
+                    <button type="button" onclick="showComingSoonPopup()" class="btn-google">Google</button>
+                    <button type="button" onclick="showComingSoonPopup()" class="btn-twitter">Twitter</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Coming Soon Popup -->
+    <div id="comingSoonPopup" class="coming-soon-popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closePopup()">&times;</span>
+            <h2>Feature Coming Soon!</h2>
+            <p>This feature is currently in development. Stay tuned for updates!</p>
         </div>
     </div>
 

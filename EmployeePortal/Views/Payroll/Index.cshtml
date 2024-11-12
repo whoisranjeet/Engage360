@@ -1,0 +1,236 @@
+﻿<div class="cards-container">
+    @if (User.IsInRole("HR") || User.IsInRole("Admin"))
+    {
+        <a href="/Generate Payroll" class="text-decoration-none text-reset">
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-file-invoice-dollar"></i> <!-- Icon for Generate Payroll -->
+                </div>
+                <h3>Generate Payroll</h3>
+                <p>Quickly generate payroll for employees with ease and accuracy.</p>
+            </div>
+        </a>
+    }
+
+    <a id="viewDownloadPayroll" class="text-decoration-none text-reset">
+        <div class="card">
+            <div class="card-icon">
+                <i class="fas fa-download"></i> <!-- Icon for Manage -->
+            </div>
+            <h3>View/Download</h3>
+            <p>View or download payroll and employee management reports</p>
+        </div>
+    </a>
+</div>
+
+<!-- Popup for View/Download options -->
+<div id="popup" class="popup hidden">
+    <div class="popup-content">
+        <span id="closePopup" class="close">&times;</span>
+        <h3>Select Payroll Duration</h3>
+
+        <label for="payrollDuration">Payroll Duration:</label>
+        <select id="payrollDuration" asp-items="ViewBag.Duration">
+            <option value="">--Select Payroll Month--</option>
+        </select>
+
+        <div class="popup-actions">
+            <button id="viewButton">View</button>
+            <button id="downloadButton">Download</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .cards-container {
+        display: flex;
+        gap: 30px;
+    }
+
+    .card {
+        width: 250px;
+        background-color: #f0f0f0;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        padding: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+    .card-icon {
+        font-size: 40px;
+        color: #4a90e2; /* Customize this color */
+        margin-bottom: 15px;
+    }
+
+    .card h3 {
+        font-size: 22px;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .card p {
+        font-size: 16px;
+        color: #666;
+        line-height: 1.4;
+    }
+
+    /* Popup overlay styling */
+    .popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Popup container styling */
+    .popup-content {
+        width: 375px;
+        height: 255px;
+        display: flex;
+        gap: 8px;
+        position: relative;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #f0f0f0;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Close button styling */
+    .close {
+        position: absolute;
+        top: 0;
+        right: 10px;
+        font-size: 25px;
+        cursor: pointer;
+        color: #4a90e2; /* Matches the icon color */
+    }
+
+    /* Header styling */
+    .popup-content h3 {
+        font-size: 22px;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    /* Label and dropdown styling */
+    .popup-content label {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 10px;
+        display: block;
+        text-align: left;
+    }
+
+    .popup-content select {
+        width: 100%;
+        padding: 8px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    /* Popup action buttons */
+    .popup-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
+
+        .popup-actions button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+    #viewButton {
+        background-color: #4a90e2;
+    }
+
+        #viewButton:hover {
+            background-color: #3b7dc2;
+        }
+
+    #downloadButton {
+        background-color: #4caf50;
+    }
+
+        #downloadButton:hover {
+            background-color: #3e8e41;
+        }
+
+    #viewButton, #downloadButton {
+        width: 110px;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+</style>
+
+<script>
+
+    document.getElementById("viewDownloadPayroll").addEventListener("click", function () {
+        const popup = document.getElementById("popup");
+
+        // Show the popup
+        popup.classList.remove("hidden");
+    });
+
+    document.getElementById("closePopup").addEventListener("click", function () {
+        document.getElementById("popup").classList.add("hidden");
+    });
+
+    // Optional: Add event listeners for View and Download buttons
+    document.getElementById("viewButton").addEventListener("click", function () {
+        const selectedMonth = document.getElementById("payrollDuration").value;
+
+        $.ajax({
+            url: '@Url.Action("GetPayroll")',
+            type: 'POST',
+            data: { duration: selectedMonth },
+            success: function (data) {
+                window.location.href = '@Url.Action("DisplayPayroll")';
+            }
+        });
+
+        document.getElementById("popup").classList.add("hidden");
+    });
+
+    document.getElementById("downloadButton").addEventListener("click", function () {
+        const selectedMonth = document.getElementById("payrollDuration").value;
+
+        $.ajax({
+            url: '@Url.Action("PayrollPDF")',
+            type: 'POST',
+            data: { duration: selectedMonth },
+            success: function (data) {
+                console.log("success...");
+            }
+        });
+
+        document.getElementById("popup").classList.add("hidden");
+    });
+
+</script>
