@@ -5,6 +5,7 @@
 		<Nullable>disable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<PlatformTarget>AnyCPU</PlatformTarget>
+		<UserSecretsId>dfc3c439-8ed9-4540-be81-430f6d2b35d9</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -25,6 +26,11 @@
 	<ItemGroup>
 		<ProjectReference Include="..\EmployeePortal.Data\EmployeePortal.Data.csproj" />
 		<ProjectReference Include="..\EmployeePortal.Services\EmployeePortal.Services.csproj" />
+		<PackageReference Include="System.Text.Encoding.Extensions" Version="4.3.0" />  		
+		<PackageReference Include="Microsoft.Win32.Primitives" Version="4.3.0" />
+		<PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
+		<PackageReference Include="System.Text.Encoding.Extensions" Version="4.3.0" />
+		<PackageReference Include="System.Net.Primitives" Version="4.3.0" />
 	</ItemGroup>
 
 </Project>
