@@ -1,0 +1,250 @@
+﻿<div class="inner-container">
+    <div class="payroll-container w-75">
+        <h1>Generate Payroll</h1>
+
+        <!-- Step Indicators -->
+        <div class="step-indicator">
+            <div class="step active" id="reviewEmployeesStep">
+                <span class="icon">📋</span>
+                <span>Review Employees</span>
+            </div>
+            <div class="step" id="generateSalariesStep">
+                <span class="icon">💵</span>
+                <span>Generate Salaries</span>
+            </div>
+            <div class="step" id="confirmSubmitStep">
+                <span class="icon">✅</span>
+                <span>Confirm & Submit</span>
+            </div>
+        </div>
+
+        <!-- Employee Filter Section (Visible in 'Review Employees' step) -->
+        <div class="filter-section" id="filterSection">
+            <div class="filter">
+                <label for="department"><i class="icon">🏢</i> Department:</label>
+                <select id="department" class="filter-input" asp-items="ViewBag.Departments">
+                    <option value="">All Departments</option>
+                </select>
+            </div>
+            <div class="filter">
+                <label for="pay-period"><i class="icon">📅</i> Pay Period:</label>
+                <input type="month" id="pay-period" class="filter-input" value="@DateTime.Now.ToString("yyyy-MM")">
+            </div>
+            <button class="filter-btn">Filter Employees</button>
+        </div>
+
+        <!-- Employee List Table (Visible in 'Review Employees' step) -->
+        <div class="employee-list" id="employeeList">
+            <table>
+                <thead>
+                    <tr>
+                        <th><i class="icon">👤</i> Employee Name</th>
+                        <th><i class="icon">🏢</i> Department</th>
+                        <th><i class="icon">💵</i> Salary</th>
+                        <th><i class="icon">✔️</i> Select</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamic rows go here after filter action -->
+                </tbody>
+            </table>
+        </div>
+        <!-- Generate Salaries Form (Visible in 'Generate Salaries' step) -->
+        <div class="generate-salaries-section" id="generateSalariesForm" style="display: none;">
+            <div class="form-group">
+                <label>House Rent Allowance:</label>
+                <input type="number" class="form-input credit" id="houseRentAllowance">
+            </div>
+            <div class="form-group">
+                <label>Shift Allowance:</label>
+                <input type="number" class="form-input credit" id="shiftAllowance">
+            </div>
+            <div class="form-group">
+                <label>Travel Allowance:</label>
+                <input type="number" class="form-input credit" id="travelAllowance">
+            </div><div class="form-group">
+                <label>Miscellaneous Credit:</label>
+                <input type="number" class="form-input credit" id="miscellaneousCredit">
+            </div>
+            <div class="form-group">
+                <label>Professional Tax:</label>
+                <input type="number" class="form-input debit" id="professionalTax">
+            </div>
+            <div class="form-group">
+                <label>Provident Fund:</label>
+                <input type="number" class="form-input debit" id="providentFund">
+            </div>
+            <div class="form-group">
+                <label>Miscellaneous Deduction:</label>
+                <input type="number" class="form-input debit" id="miscellaneousDeduction">
+            </div>
+            <div class="form-group">
+                <textarea class="form-input" rows="4" placeholder="Remarks..." id="remarks"></textarea>
+            </div>
+        </div>
+
+        <!-- Confirm & Submit Section (Visible in 'Confirm & Submit' step) -->
+        <div class="confirm-submit-section" id="confirmSubmitSection" style="display: none;">
+            <div>
+                <h3>Confirm Payroll Details</h3>
+                <p>Please review the details and click 'Submit' to finalize payroll.</p>
+            </div>
+            <button type="submit" id="submitPayroll" class="generate-btn">Submit Payroll</button>
+        </div>
+        <!-- Navigation Buttons -->
+        <div class="generate-section">
+            <button class="nav-buttons" id="prevStep" disabled>Previous</button>
+            <button class="nav-buttons" id="nextStep">Next</button>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const steps = document.querySelectorAll(".step");
+        let currentStep = 0;
+
+        const prevButton = document.getElementById("prevStep");
+        const nextButton = document.getElementById("nextStep");
+
+        // Sections
+        const filterSection = document.getElementById("filterSection");
+        const employeeList = document.getElementById("employeeList");
+        const generateSalariesForm = document.getElementById("generateSalariesForm");
+        const confirmSubmitSection = document.getElementById("confirmSubmitSection");
+
+        function updateStepIndicator() {
+            steps.forEach((step, index) => {
+                step.classList.toggle("active", index === currentStep);
+            });
+
+            prevButton.disabled = currentStep === 0;
+            nextButton.disabled = currentStep === steps.length - 1;
+
+            // Toggle visibility based on the step
+            filterSection.style.display = currentStep === 0 ? "flex" : "none";
+            employeeList.style.display = currentStep === 0 && $('tbody').children().length > 0 ? "block" : "none";
+            generateSalariesForm.style.display = currentStep === 1 ? "block" : "none";
+            confirmSubmitSection.style.display = currentStep === 2 ? "flex" : "none";
+        }
+
+        // Next button functionality with validation for each step
+        nextButton.addEventListener("click", () => {
+            if (currentStep === 0) {
+                // Validate if at least one employee is selected
+                const employeeEmails = [];
+                $('#employee-checkbox:checked').each(function () {
+                    employeeEmails.push($(this).val());
+                });
+
+                if (employeeEmails.length === 0) {
+                    alert("Please select at least one employee.");
+                    return;
+                }
+            }
+
+            if (currentStep === 1) {
+                // Validate the Generate Salaries form fields
+                const hra = $('#houseRentAllowance').val();
+                const shiftAllowance = $('#shiftAllowance').val();
+                const travelAllowance = $('#travelAllowance').val();
+                const miscellaneousCredit = $('#miscellaneousCredit').val();
+                const professionalTax = $('#professionalTax').val();
+                const providentFund = $('#providentFund').val();
+                const miscellaneousDeduction = $('#miscellaneousDeduction').val();
+
+                if (!hra || !shiftAllowance || !travelAllowance || !miscellaneousCredit || !professionalTax || !providentFund || !miscellaneousDeduction) {
+                    alert("Please fill out all required fields in the Generate Salaries form.");
+                    return;
+                }
+            }
+
+            // Move to the next step if validation is successful
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                updateStepIndicator();
+            }
+        });
+
+        // Previous button functionality
+        prevButton.addEventListener("click", () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateStepIndicator();
+            }
+        });
+
+        updateStepIndicator();
+
+        // Filter button functionality
+        $('.filter-btn').on('click', function () {
+            const department = $('#department').val();
+            const payPeriod = $('#pay-period').val();
+
+            $.ajax({
+                url: '@Url.Action("FilterEmployees")',
+                type: 'POST',
+                data: { department: department, payPeriod: payPeriod },
+                success: function (data) {
+                    let employeeTable = '';
+                    data.forEach(employee => {
+                        employeeTable += `
+                                                <tr>
+                                                    <td>${employee.firstName}</td>
+                                                    <td>${employee.department}</td>
+                                                    <td>$${employee.salary}</td>
+                                                    <td><input id="employee-checkbox" type="checkbox" class="employee-checkbox" value="${employee.emailAddress}"></td>
+                                                </tr>
+                                            `;
+                    });
+                    $('tbody').html(employeeTable);
+                    updateStepIndicator();
+                }
+            });
+        });
+
+        // Final submission for Confirm & Submit step
+        $('#submitPayroll').on('click', function () {
+            const employeeEmails = [];
+            $('#employee-checkbox:checked').each(function () {
+                employeeEmails.push($(this).val());
+            });
+            const payPeriod = $('#pay-period').val();
+            const salary = {
+                PayrollDate: payPeriod,
+                HRA: $('#houseRentAllowance').val() || 0,
+                ShiftAllowance: $('#shiftAllowance').val() || 0,
+                TravelAllowance: $('#travelAllowance').val() || 0,
+                MiscellaneousCredit: $('#miscellaneousCredit').val() || 0,
+                PT: $('#professionalTax').val() || 0,
+                PF: $('#providentFund').val() || 0,
+                MiscellaneousDebit: $('#miscellaneousDeduction').val() || 0,
+                Remarks: $('#remarks').val()
+            };
+
+            var viewModel = {
+                Salary: salary,
+                EmployeeEmails: employeeEmails
+            };
+
+            if (employeeEmails.length === 0 || !payPeriod) {
+                alert("Please select employees and a pay period.");
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("GenerateSalaries")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(viewModel),
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                    } else {
+                        alert("Error generating payroll.");
+                    }
+                }
+            });
+        });
+    });
+
+</script>

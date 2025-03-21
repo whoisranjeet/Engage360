@@ -1,0 +1,128 @@
+﻿@using EmployeePortal.ViewModel
+@model PayrollPDFViewModel
+
+<style>
+    .payslip-container {
+        max-width: 700px;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        background-color: #f9f9f9;
+    }
+
+    .company-details, .employee-details, .salary-details, .deductions-details, .net-salary, .footer {
+        margin-bottom: 20px;
+    }
+
+    .header, .footer {
+        text-align: center;
+    }
+
+        .header img {
+            max-width: 100px;
+        }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .table th, .table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .table th {
+            background-color: #f2f2f2;
+        }
+
+    .table-total td {
+        font-weight: bold;
+    }
+
+    .signature {
+        text-align: right;
+    }
+
+    .abbreviations {
+        font-size: 12px;
+        color: #666;
+    }
+</style>
+
+<div class="payslip-container w-75">
+    <!-- Company Details -->
+    <div class="header">
+        <img src="~/favicon.png" alt="Company Logo" />
+        <h2>Engage360 Limited</h2>
+        <p>Engage360 Limited, IT Park Road, Nagpur, 440012</p>
+        <p>Phone: +91 7304175111 | Email: office@engage360.com</p>
+    </div>
+
+    <!-- Payslip Title -->
+    <div class="header">
+        <h3>Payslip</h3>
+        <p>Payroll Number: </p>
+        <p>Date: @Model.Salary.PayrollDate</p>
+    </div>
+
+    <!-- Employee Details -->
+    <div class="employee-details">
+        <p><strong>Name:</strong> @Model.Employee.FirstName @Model.Employee.LastName</p>
+        <p><strong>Address:</strong> @Model.Employee.Address</p>
+        <p><strong>Phone:</strong> @Model.Employee.MobileNumber</p>
+        <p><strong>Email:</strong> @Model.Employee.Address</p>
+        <p><strong>Department:</strong> @Model.Employee.Department</p>
+    </div>
+
+    <!-- Salary Details -->
+    <div class="salary-details">
+        <h4>Earnings</h4>
+        <table class="table">
+            <tr><th>Description</th><th>Amount (₹)</th></tr>
+            <tr><td>Basic</td><td>@Model.Salary.Basic.ToString("C")</td></tr>
+            <tr><td>HRA</td><td>@Model.Salary.HRA.ToString("C")</td></tr>
+            <tr><td>Shift Allowance</td><td>@Model.Salary.ShiftAllowance.ToString("C")</td></tr>
+            <tr><td>Travel Allowance</td><td>@Model.Salary.TravelAllowance.ToString("C")</td></tr>
+            <tr><td>Miscellaneous Credit</td><td>@Model.Salary.MiscellaneousCredit.ToString("C")</td></tr>
+            <tr class="table-total"><td>Total Earnings</td><td>@Model.Salary.TotalEarning.ToString("C")</td></tr>
+        </table>
+    </div>
+
+    <!-- Deductions -->
+    <div class="deductions-details">
+        <h4>Deductions</h4>
+        <table class="table">
+            <tr><th>Description</th><th>Amount (₹)</th></tr>
+            <tr><td>PT</td><td>@Model.Salary.PT.ToString("C")</td></tr>
+            <tr><td>PF</td><td>@Model.Salary.PF.ToString("C")</td></tr>
+            <tr><td>Miscellaneous Deduction</td><td>@Model.Salary.MiscellaneousDebit.ToString("C")</td></tr>
+            <tr class="table-total"><td>Total Deductions</td><td>@Model.Salary.TotalDeduction.ToString("C")</td></tr>
+        </table>
+    </div>
+
+    <!-- Net Salary -->
+    <div class="net-salary">
+        <h4>Net Salary</h4>
+        <table class="table">
+            <tr><th>Total Earnings</th><td>@Model.Salary.TotalEarning.ToString("C")</td></tr>
+            <tr><th>Total Deductions</th><td>@Model.Salary.TotalDeduction.ToString("C")</td></tr>
+            <tr class="table-total"><td>Net Salary</td><td>@Model.Salary.NetSalary.ToString("C")</td></tr>
+        </table>
+    </div>
+
+    <!-- Signature -->
+    <div class="signature">
+        <p>____________________</p>
+        <p>Authorized Signature</p>
+    </div>
+
+    <!-- Abbreviations and Meanings -->
+    <div class="abbreviations">
+        <p><strong>Abbreviations:</strong></p>
+        <p><strong>HRA:</strong> House Rent Allowance</p>
+        <p><strong>PF:</strong> Provident Fund</p>
+        <p><strong>PT:</strong> Professional Tax</p>
+    </div>
+</div>

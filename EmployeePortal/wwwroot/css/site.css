@@ -1,7 +1,56 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f9;
+    overflow-y: scroll;
 }
+
+/* Basic modal styles */
+.custom-alert {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-alert-content {
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px;
+    width: 330px;
+    height: 155px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.custom-alert p {
+    margin-bottom: 15px;
+    font-size: 15.5px;
+    color: #333;
+    text-align: center;
+}
+
+.custom-alert .btn-ok {
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: white;
+    min-width: 80px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .custom-alert .btn-ok:hover {
+        background-color: #0056b3;
+    }
 
 .SignInOut-Body {
     font-family: Arial, sans-serif;
@@ -13,7 +62,12 @@ body {
 }
 
 .mt-6 {
-    margin-top: 56px;
+    min-height: calc(100vh - 56px - 56px);
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .login-container {
@@ -41,6 +95,10 @@ h2 {
     margin-bottom: 15px;
 }
 
+#employeeUpdateForm .input-group {
+    gap: 0 6px;
+}
+
 label {
     display: block;
     font-weight: bold;
@@ -49,12 +107,19 @@ label {
 
 input[type="email"],
 input[type="text"],
-input[type="password"] {
+input[type="password"],
+input[type="file"],
+select {
     width: 100%;
     padding: 10px;
+    height: 45px !important;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 5px !important;
     box-sizing: border-box;
+}
+
+.department-select {
+    height: 46px;
 }
 
 button.login-btn {
@@ -133,4 +198,450 @@ button.login-btn {
 
 .social-buttons button:hover {
     opacity: 0.9;
+}
+
+.new-employee-box {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin: 0 auto;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.new-emp-input-box {
+    display: flex;
+    gap: 25px;
+}
+
+.new-emp-row {
+    display: grid;
+    width: 100%;
+    gap: 0 25px;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.new-emp-btns {
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+}
+
+button.new-emp-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+    button.new-emp-btn:hover {
+        background-color: #0056b3;
+    }
+
+.change-role
+{
+    padding: 0 10px;
+}
+
+.change-role-inner {
+    display: flex;
+    flex: 1;
+}
+
+.role-modify-submit {
+    min-width: 120px;
+}
+
+.role-map, .change-role {
+    align-items: center;
+    gap: 10px;
+}
+
+
+.role-map-select {
+    height: 45.6px;
+}
+
+.role-map-container, 
+.detele-employee-container, 
+.employee-update-container {
+    padding: 20px;
+}
+
+.remove-btn {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.social-container {
+    display: flex;
+}
+
+/* Styling for the social posts container */
+.social-posts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 60%;
+    padding: 15px 10px 0 0;
+}
+
+.social-media-posts-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 15px 0 0 10px;
+    min-width: 0;
+}
+
+.social-media-post-card {
+    border: none;
+    border-radius: 10px;
+    height: 270px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .social-media-post-card:hover {
+        transform: translateY(-5px);
+        cursor: pointer;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+/* Card styling */
+.social-posts-container .card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .social-posts-container .card:hover {
+        transform: translateY(-5px);
+        cursor: pointer;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+/* Card body styling */
+.social-posts-container .card-body {
+    padding: 20px;
+}
+
+.social-posts-container .card-title {
+    font-size: 1.5em;
+    font-weight: 700;
+}
+
+.social-posts-container .card-text {
+    color: #666;
+    margin-bottom: 5px;
+}
+
+    /* Metadata styling */
+    .social-posts-container .card-text small {
+        color: #999;
+        font-size: 0.9em;
+    }
+
+/* Image styling */
+.social-posts-container img.img-fluid {
+    height: 300px;
+    width: 100%;
+    margin: 6px 0;
+    object-fit: cover;
+    border-radius: 10px;
+    border: solid 1px #80808075;
+}
+
+/* Icons and Additional styling */
+.social-posts-container .post-meta-icons {
+    display: flex;
+    gap: 10px;
+    font-size: 0.9em;
+    color: #555;
+    margin-top: 10px;
+}
+
+    .social-posts-container .post-meta-icons i {
+        cursor: pointer;
+        transition: color 0.2s ease;
+    }
+
+        .social-posts-container .post-meta-icons i:hover {
+            color: #007bff;
+        }
+
+.payroll-container {
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.step-indicator {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.step {
+    padding: 10px;
+    text-align: center;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+    .step.active {
+        font-weight: bold;
+        color: #4CAF50;
+        opacity: 1;
+    }
+
+    .step .icon {
+        font-size: 20px;
+        display: block;
+    }
+
+    .step.active .icon {
+        color: #4CAF50;
+    }
+
+/* Filter Section Styling */
+.filter-section {
+    display: flex;
+    align-items: end;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filter {
+    flex: 1;
+}
+
+    .filter label {
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 5px;
+        display: inline-block;
+    }
+
+.filter-input {
+    width: 100%;
+    padding: 8px;
+    height: 42px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.filter-btn {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    height: 42px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+    .filter-btn:hover {
+        background-color: #45a049;
+    }
+
+/* Employee List Styling */
+.employee-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.employee-list th, .employee-list td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.employee-list th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    color: #333;
+}
+
+.employee-checkbox {
+    cursor: pointer;
+}
+
+/* Generate Button Styling */
+.generate-section {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.generate-btn {
+    padding: 12px 25px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+    .generate-btn:hover {
+        background-color: #45a049;
+    }
+
+.nav-buttons {
+    padding: 12px 25px;
+    font-size: 16px;
+    background-color: #393939;
+    color: white;
+    border: none;
+    width: 120px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+    .nav-buttons:hover {
+        background-color: #262525;
+    }
+
+    /* Disabled state styling */
+    .nav-buttons:disabled {
+        background-color: #ccc;
+        color: #666;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+.icon {
+    margin-right: 5px;
+    color: #4CAF50;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.confirm-submit-section {
+    gap: 40px;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.credit {
+    background: #00800015;
+}
+
+.debit {
+    background: #ff000015;
+}
+
+/* Basic Styles for Popup Overlay */
+.coming-soon-popup {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Popup Content Styles */
+.popup-content {
+    box-sizing: border-box;
+    background: #ffffff;
+    padding: 20px 40px;
+    border-radius: 8px;
+    flex-direction: column;
+    display: flex;
+    width: 350px;
+    gap: 5px;
+    height: 160px;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    animation: popupAnimation 0.4s ease-out;
+}
+
+/* Close Button Style */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    color: #888;
+    cursor: pointer;
+}
+
+    .close-btn:hover {
+        color: #333;
+    }
+
+/* Header and Paragraph Styles */
+.popup-content h2 {
+    color: #4a90e2;
+    font-size: 24px;
+    margin-bottom: 10px;
+    margin-top: 0;
+}
+
+.popup-content p {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Popup Animation */
+@keyframes popupAnimation {
+    from {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.hover-blue:hover {
+    color: #007bff;
+}
+
+.inner-container {
+    width: 100%;
+    min-height: calc(100vh - 56px - 56px);
+    align-items: baseline;
+    justify-content: center;
+    display: flex;
 }

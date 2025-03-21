@@ -1,0 +1,97 @@
+﻿@model EmployeePortal.Core.DTOs.EmployeeDto
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engage360 - Sign Up</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="icon" type="image/png" href="~/favicon.png" />
+</head>
+<body class="SignInOut-Body">
+    <div class="login-container">
+        <div class="login-box">
+            <h2>Sign Up</h2>
+            <form method="post" asp-action="UserSignUp" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary-errors">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <p>@error.ErrorMessage</p>
+                        }
+                    </div>
+                }
+                <div class="input-group">
+                    <label asp-for="FirstName"></label>
+                    <input asp-for="FirstName" type="text" />
+                </div>
+                <div class="input-group">
+                    <label asp-for="LastName"></label>
+                    <input asp-for="LastName" type="text" />
+                </div>
+                <div class="input-group">
+                    <label asp-for="ProfilePicture"></label>
+                    <input type="file" name="imageUpload" accept="image/*" class="form-control w-100">
+                </div>
+                <div class="input-group">
+                    <label asp-for="EmailAddress"></label>
+                    <input asp-for="EmailAddress" type="email" />
+                </div>
+                <div class="input-group">
+                    <label asp-for="MobileNumber"></label>
+                    <input asp-for="MobileNumber" type="text" />
+                </div>
+                <div class="input-group">
+                    <label asp-for="Gender"></label>
+                    <select asp-for="Gender" asp-items="ViewBag.Genders" class="department-select">
+                        <option value="">Gender</option>
+                    </select>
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </div>
+                <div class="input-group">
+                    <label asp-for="Address"></label>
+                    <input asp-for="Address" type="text" />
+                </div>
+                <div class="input-group">
+                    <label asp-for="Department"></label>
+                    <select asp-for="Department" asp-items="ViewBag.Departments">
+                        <option value="">Select Department</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" type="text" />
+                </div>
+                <div class="input-group">
+                    <label asp-for="ConfirmPassword"></label>
+                    <input asp-for="ConfirmPassword" type="text" />
+                </div>
+                <div class="input-group">
+                    <button type="submit" class="login-btn">Sign Up</button>
+                </div>
+                <div class="signup-link">
+                    <span>Already have an account? <a href="/">Sign In</a></span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="~/js/site.js"></script>
+</body>
+</html>
+
+<style>
+    input[type="file"]::file-selector-button {
+        background-color: #00000030;
+        color: white;
+        padding: 5px;
+        border: none;
+        border-radius: 3px;
+    }
+</style>
