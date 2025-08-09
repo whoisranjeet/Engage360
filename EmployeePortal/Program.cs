@@ -21,6 +21,13 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/Portal/SignIn";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
     });
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set timeout duration
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true; // Make the cookie essential
+});
+
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
@@ -39,6 +46,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseSession();
 
 app.MapControllerRoute(
     name: "rootSignIn",
