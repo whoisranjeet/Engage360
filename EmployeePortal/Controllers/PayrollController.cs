@@ -1,5 +1,6 @@
 ﻿using DinkToPdf;
 using DinkToPdf.Contracts;
+using EmployeePortal.Core.DTOs;
 using EmployeePortal.Core.Interfaces;
 using EmployeePortal.ViewModel;
 using Microsoft.AspNetCore.Mvc;
@@ -67,11 +68,11 @@ namespace EmployeePortal.Controllers
             var salaryBreakup = salaryDto.Salary;
             var basicSalaries = _salaryService.GetEmployeeBasic();
 
-            foreach(var employee in employeeEmails)
+            foreach (var employee in employeeEmails)
             {
                 salaryBreakup.EmployeeEmail = employee;
                 salaryBreakup.Basic = basicSalaries.FirstOrDefault(emp => emp.EmailAddress == employee).Salary;
-                salaryBreakup.TotalEarning = salaryBreakup.Basic + salaryBreakup.HRA + salaryBreakup.ShiftAllowance + salaryBreakup.TravelAllowance+ salaryBreakup.MiscellaneousCredit;
+                salaryBreakup.TotalEarning = salaryBreakup.Basic + salaryBreakup.HRA + salaryBreakup.ShiftAllowance + salaryBreakup.TravelAllowance + salaryBreakup.MiscellaneousCredit;
                 salaryBreakup.TotalDeduction = salaryBreakup.PF + salaryBreakup.PT + salaryBreakup.MiscellaneousDebit;
                 salaryBreakup.NetSalary = salaryBreakup.TotalEarning - salaryBreakup.TotalDeduction;
                 salaryBreakup.ProcessedBy = User.FindFirst(ClaimTypes.Name)?.Value;
@@ -85,25 +86,30 @@ namespace EmployeePortal.Controllers
         public IActionResult GetPayroll(string duration)
         {
             var userEmail = User.FindFirst(ClaimTypes.Name)?.Value;
-            var employee = _employeeService.GetEmployeeDetails(userEmail);
-            var salary = _salaryService.GetEmployeeSalary(userEmail, duration);
 
-            // Save the view model to TempData to persist it across requests
-            TempData["PayrollPDFViewModel"] = JsonConvert.SerializeObject(new PayrollPDFViewModel
+            if (!string.IsNullOrEmpty(duration) && !string.IsNullOrEmpty(userEmail))
             {
-                Salary = salary,
-                Employee = employee
-            });
+                TempData["UserEmail"] = userEmail;
+                TempData["Duration"] = duration;
 
-            // Return a JSON response indicating success
-            return Json(new { success = true });
+                return Json(new { success = true });
+            }
+
+            return Json(new { success = false });
         }
-        
+
         public IActionResult DisplayPayroll()
         {
-            if (TempData["PayrollPDFViewModel"] is string payrollDataJson)
+            var viewModel = new PayrollPDFViewModel();
+
+            if (TempData["UserEmail"] is string userEmail && TempData["Duration"] is string duration)
             {
-                var viewModel = JsonConvert.DeserializeObject<PayrollPDFViewModel>(payrollDataJson);
+                viewModel.Employee = _employeeService.GetEmployeeDetails(userEmail);
+                viewModel.Salary = _salaryService.GetEmployeeSalary(userEmail, duration);
+            }
+
+            if (viewModel != null)
+            {
                 return View("PayrollPDF", viewModel);
             }
 

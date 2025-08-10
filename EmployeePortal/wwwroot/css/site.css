@@ -284,6 +284,7 @@ button.new-emp-btn {
 
 .social-container {
     display: flex;
+    width: 100%;
 }
 
 /* Styling for the social posts container */
