@@ -9,15 +9,13 @@ namespace EmployeePortal.Core.Models
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
-        [Required]
         public string Gender { get; set; }
         public byte[] ProfilePicture { get; set; }
         [Required]
         public string EmailAddress { get; set; }
+        [Required]
         public string MobileNumber { get; set; }
-        [Required]
         public string Address { get; set; }
-        [Required]
         public string Department { get; set; }
         public long Salary { get; set; }
         public Guid? UserId { get; set; }

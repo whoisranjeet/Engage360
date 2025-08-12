@@ -9,16 +9,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Engage360</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="icon" type="image/png" href="~/favicon.png" />
 </head>
 <body class="SignInOut-Body">
     <div class="login-container">
         <div class="login-box">
-            <h2>Sign In</h2>
+            <div class="tab-toggle-container mb-2">
+                <div class="tab-toggle">
+                    <a href="/" class="active">Sign in</a>
+                    <a href="/SignUp">Sign up</a>
+                </div>
+            </div>
+            <h5 class="mb-3 text-center">Welcome back</h5>
             <form method="post" asp-action="UserSignIn">
                 @Html.AntiForgeryToken()
-                @if (!ViewData.ModelState.IsValid)
+                @* @if (!ViewData.ModelState.IsValid)
                 {
                     <div class="validation-summary-errors">
                         @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
@@ -26,34 +33,34 @@
                             <p>@error.ErrorMessage</p>
                         }
                     </div>
-                }
-                <div class="input-group">
-                    <label asp-for="Username"></label>
-                    <input asp-for="Username" type="text" id="username" required />
+                } *@
+                <div class="input-group mb-2">
+                    <input asp-for="Username" type="text" id="username" placeholder="Enter your email" required />
                 </div>
-                <div class="input-group">
-                    <label asp-for="Password"></label>
-                    <input asp-for="Password" type="password" id="password" required />
+                <div class="input-group mb-2">
+                    <input asp-for="Password" type="password" id="password" placeholder="Enter your password" required />
                 </div>
-                <div class="forgot-password">
-                    <a onclick="showComingSoonPopup()">Forgot Password?</a>
+                <div class="d-flex justify-content-between gap-1 mb-2">
+                    <div class="d-flex gap-1">
+                        <input for="RememberMe" type="checkbox" id="RememberMe">
+                        <label for="RememberMe" class="terms m-0 remember-me fw-normal">Remember Me</label>
+                    </div>
+                    <a onclick="showComingSoonPopup()" class="terms forgot-password m-0">Forgot Password?</a>
                 </div>
                 <div class="input-group">
                     <button type="submit" class="login-btn">Sign In</button>
                 </div>
-                <div class="signup-link">
-                    <span>Don't have an account? <a href="/SignUp">Sign Up</a></span>
-                </div>
+                <div class="or">OR SIGN IN WITH</div>
             </form>
 
             <!-- Social Login Buttons -->
-            <div class="social-login">
-                <h3>Or Sign In with</h3>
-                <div class="social-buttons">
-                    <button type="button" onclick="showComingSoonPopup()" class="btn-facebook">Facebook</button>
-                    <button type="button" onclick="showComingSoonPopup()" class="btn-google">Google</button>
-                    <button type="button" onclick="showComingSoonPopup()" class="btn-twitter">Twitter</button>
-                </div>
+            <div class="d-flex gap-2 justify-content-between">
+                <button type="button" onclick="showComingSoonPopup()" class="flex-1 social-button"><img src="~/img/G.svg" class="social-icon" alt="Google Logo" /></button>
+                <button type="button" onclick="showComingSoonPopup()" class="flex-1 social-button"><img src="~/img/F.svg" class="social-icon" alt="Facebook Logo" /></button>
+                <button type="button" onclick="showComingSoonPopup()" class="flex-1 social-button"><img src="~/img/X.svg" class="social-icon" alt="X Logo" /></button>
+            </div>
+            <div class="terms">
+                Do you have an account? <a href="/SignUp" style="cursor:pointer;">Sign Up</a>.
             </div>
         </div>
     </div>

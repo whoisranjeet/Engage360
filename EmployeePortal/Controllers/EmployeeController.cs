@@ -62,32 +62,24 @@ namespace EmployeePortal.Controllers
         [AllowAnonymous]
         public IActionResult UserSignUp()
         {
-            ViewBag.Departments = new SelectList(_portalHelper.GetAllDepartment());
-            ViewBag.Genders = new SelectList(_portalHelper.GetAllGender());
-
             return View();
         }
 
         [Route("SignUp")]
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult UserSignUp(EmployeeDto employeeDto, IFormFile imageUpload)
-        {
-            ModelState.Remove(nameof(employeeDto.ProfilePicture));
-
-            if (imageUpload != null && imageUpload.Length > 0)
-            {
-                using (var memoryStream = new MemoryStream())
-                {
-                    imageUpload.CopyToAsync(memoryStream);
-                    employeeDto.ProfilePicture = memoryStream.ToArray();
-                }
-            }
-
+        public IActionResult UserSignUp(EmployeeDto employeeDto)
+        {           
             if (ModelState.IsValid)
             {
+                var generatedPassword = GeneratePassword(employeeDto.LastName);
+                employeeDto.Password = generatedPassword;
+
                 if (_employeeService.UserSignUp(employeeDto))
                 {
+                    string emailBody = string.Format("Your account has been set up in our system.\nLogin Details:\nUsername: {0}\nPassword: {1}", employeeDto.EmailAddress, generatedPassword);
+                    _emailService.SendEmailUsingGmail(employeeDto.EmailAddress, "Your account has been setup. : Engage360", emailBody);
+
                     UserDto userDto = new()
                     {
                         Username = employeeDto.EmailAddress,
@@ -100,9 +92,6 @@ namespace EmployeePortal.Controllers
                     }
                 }
             }
-
-            ViewBag.Departments = new SelectList(_portalHelper.GetAllDepartment());
-            ViewBag.Genders = new SelectList(_portalHelper.GetAllGender());
 
             return View(employeeDto);
         }
@@ -156,10 +145,8 @@ namespace EmployeePortal.Controllers
 
             var generatedPassword = GeneratePassword(employeeDto.LastName);
             employeeDto.Password = generatedPassword;
-            employeeDto.ConfirmPassword = generatedPassword;
 
             ModelState.Remove(nameof(employeeDto.Password));
-            ModelState.Remove(nameof(employeeDto.ConfirmPassword));
             ModelState.Remove(nameof(employeeDto.ProfilePicture));
 
             if (ModelState.IsValid)
