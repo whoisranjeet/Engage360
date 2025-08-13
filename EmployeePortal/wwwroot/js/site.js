@@ -42,3 +42,26 @@ function showComingSoonPopup() {
 function closePopup() {
     document.getElementById("comingSoonPopup").style.display = "none";
 }
+
+// SignIn SignUp Toggle
+const signInTab = document.getElementById("signInTab");
+const signUpTab = document.getElementById("signUpTab");
+const signInForm = document.getElementById("signInForm");
+const signUpForm = document.getElementById("signUpForm");
+const formHeading = document.getElementById("formHeading");
+
+signInTab.addEventListener("click", () => {
+signInTab.classList.add("active");
+signUpTab.classList.remove("active");
+signInForm.classList.add("active");
+signUpForm.classList.remove("active");
+formHeading.textContent = "Welcome back";
+});
+
+signUpTab.addEventListener("click", () => {
+signUpTab.classList.add("active");
+signInTab.classList.remove("active");
+signUpForm.classList.add("active");
+signInForm.classList.remove("active");
+formHeading.textContent = "Create an account";
+});

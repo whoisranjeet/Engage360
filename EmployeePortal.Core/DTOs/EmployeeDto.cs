@@ -12,8 +12,6 @@ namespace EmployeePortal.Core.DTOs
         [Required]
         [DisplayName("Last Name")]
         public string LastName { get; set; }
-        [Required]
-        [DisplayName("Gender")]
         public string Gender { get; set; }
         public byte[] ProfilePicture { get; set; }
         [Required]
@@ -22,17 +20,9 @@ namespace EmployeePortal.Core.DTOs
         [DisplayName("Mobile")]
         public string MobileNumber { get; set; }
         public string Address { get; set; }
-        [Required]
-        [DisplayName("Department")]
         public string Department { get; set; }
         public long Salary { get; set; }
-        [Required]
-        [DisplayName("Password")]
         public string Password { get; set; }
-        [Required]
-        [Compare("Password")]
-        [DisplayName("Confirm Password")]
-        public string ConfirmPassword { get; set; }
         public virtual User User { get; set; }
     }
 }
