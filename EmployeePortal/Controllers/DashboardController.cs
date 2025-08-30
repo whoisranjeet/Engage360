@@ -21,7 +21,7 @@ namespace EmployeePortal.Controllers
             _context = context;
         }
 
-        [Route("Dashboard")]
+        [HttpGet]
         public async Task<IActionResult> Dashboard()
         {
             var posts = await _context.Posts
@@ -46,31 +46,29 @@ namespace EmployeePortal.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Dashboard(DashboardViewModel viewModel, IFormFile imageUpload)
+        public async Task<IActionResult> Dashboard(DashboardViewModel viewModel)
         {
-            if (imageUpload != null && imageUpload.Length > 0)
+            if (viewModel.ImageUpload != null && viewModel.ImageUpload.Length > 0)
             {
                 using (var memoryStream = new MemoryStream())
                 {
-                    await imageUpload.CopyToAsync(memoryStream);
-                    viewModel.CreatePost.ImageData = memoryStream.ToArray(); // Save the file data as a byte array in the DTO
-                }
-                var author = User.FindFirst(ClaimTypes.Name)?.Value;
-
-                viewModel.CreatePost.Author = author;
-                viewModel.CreatePost.DateOfPublishing = DateTime.Now;
-
-                if (_dashboardService.CreatePost(viewModel.CreatePost))
-                {
-                    TempData["PostSuccess"] = "New Post Created Successfully !!!";
-                    return RedirectToAction("Dashboard", "Dashboard");
+                    await viewModel.ImageUpload.CopyToAsync(memoryStream);
+                    viewModel.CreatePost.ImageData = memoryStream.ToArray();
                 }
             }
 
-            // Now postDto contains Title, Description, and ImageData.
-            // You can save this data to the database here.
+            var author = User.FindFirst(ClaimTypes.Name)?.Value;
 
-            return View(viewModel); // Return view with updated postDto (or redirect to another view as needed)
+            viewModel.CreatePost.Author = author;
+            viewModel.CreatePost.DateOfPublishing = DateTime.Now;
+
+            if (_dashboardService.CreatePost(viewModel.CreatePost))
+            {
+                TempData["PostSuccess"] = "New Post Created Successfully !!!";
+                return RedirectToAction("Dashboard", "Dashboard");
+            }
+
+            return View(viewModel);
         }
 
         [Route("Contact Us")]

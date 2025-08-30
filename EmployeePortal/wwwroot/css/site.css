@@ -1,8 +1,12 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
     overflow-y: scroll;
     margin: 0;
+    background: linear-gradient(to bottom, #e1e1e1, #b6b6b6, #8c8c8c, #6b6b6b);
+}
+
+h5 {
+    text-transform: capitalize;
 }
 
 /* Basic modal styles */
@@ -138,6 +142,13 @@ h2 {
         right: 0;
     }
 
+.card {
+    background: rgb(165 168 189 / 20%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
 /*.input-group {
     width: auto;
 }*/
@@ -441,14 +452,18 @@ button.new-emp-btn {
     margin-top: 10px;
 }
 
-    .social-posts-container .post-meta-icons i {
+    .social-posts-container .post-meta-icons span, .social-posts-container .post-meta-icons i {
         cursor: pointer;
         transition: color 0.2s ease;
     }
 
-        .social-posts-container .post-meta-icons i:hover {
+        .social-posts-container .post-meta-icons span:hover {
             color: #007bff;
         }
+
+.post-delete-span:hover{
+    color: #ff2020 !important;
+}
 
 .payroll-container {
     padding: 20px;
