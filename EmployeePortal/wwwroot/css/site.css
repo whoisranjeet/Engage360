@@ -5,18 +5,41 @@ body {
     background: linear-gradient(to bottom, #e1e1e1, #b6b6b6, #8c8c8c, #6b6b6b);
 }
 
+.main-layout-body {
+    margin-top: 56px;
+}
+
+    .main-layout-body button {
+        min-width: 130px !important;
+    }
+
+    .main-layout-body textarea.form-control {
+        height: 300px !important;
+    }
+
+    .main-layout-body .form-control, .new-emp-row input, .new-emp-row select, .employee-update-container select, .role-map-container select {
+        background-color: #e5e5e5e5 !important;
+        color: #212529 !important;
+        border-radius: 8px !important;
+        height: 38px !important;
+        resize: none;
+    }
+
+    .main-layout-body input[type=file] {
+        color: black;
+    }
+
 h5 {
     text-transform: capitalize;
 }
 
-/* Basic modal styles */
 .custom-alert {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 9999;
     display: flex;
     justify-content: center;
@@ -149,9 +172,6 @@ h2 {
     backdrop-filter: blur(10px);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
-/*.input-group {
-    width: auto;
-}*/
 
 #employeeUpdateForm .input-group {
     gap: 0 6px;
@@ -163,27 +183,14 @@ label {
     margin-bottom: 5px;
 }
 
-/*input[type="email"],
-input[type="text"],
-input[type="password"],
-input[type="file"],
-select {
-    width: 100%;
-    padding: 10px;
-    height: 45px !important;
-    border: 1px solid #ccc;
-    border-radius: 5px !important;
-    box-sizing: border-box;
-}*/
-
 input[type="email"],
 input[type="text"],
 input[type="password"],
 input[type="file"],
+input[type="number"],
 select {
     width: 100%;
     padding: 10px;
-    margin: 6px 0;
     border-radius: 8px;
     border: none;
     background-color: rgba(255, 255, 255, 0.05);
@@ -252,40 +259,15 @@ a {
         cursor: pointer;
     }
 
-/*.social-buttons button {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: none;
-    cursor: pointer;
-    color: white;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-.social-buttons .btn-facebook {
-    background-color: #3b5998;
-}
-
-.social-buttons .btn-google {
-    background-color: #db4437;
-}
-
-.social-buttons .btn-twitter {
-    background-color: #1da1f2;
-}
-
-.social-buttons button:hover {
-    opacity: 0.9;
-}*/
-
 .new-employee-box {
-    background-color: #fff;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
     margin: 0 auto;
+    background: rgb(165 168 189 / 20%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .flex-1 {
@@ -306,7 +288,7 @@ a {
 
 .new-emp-btns {
     display: flex;
-    gap: 25px;
+    gap: 33px;
     justify-content: center;
 }
 
@@ -316,7 +298,7 @@ button.new-emp-btn {
     border: none;
     padding: 10px 20px;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 0.25rem;
     width: 100%;
     margin-top: 10px;
     font-size: 16px;
@@ -326,8 +308,7 @@ button.new-emp-btn {
         background-color: #0056b3;
     }
 
-.change-role
-{
+.change-role {
     padding: 0 10px;
 }
 
@@ -336,29 +317,39 @@ button.new-emp-btn {
     flex: 1;
 }
 
-.role-modify-submit {
-    min-width: 120px;
+.employee-search .form-control {
+    border-radius: 8px 0 0 8px !important;
+    height: 38px !important;
 }
+
 
 .role-map, .change-role {
     align-items: center;
     gap: 10px;
 }
 
-
-.role-map-select {
-    height: 45.6px;
-}
-
-.role-map-container, 
-.detele-employee-container, 
+.role-map-container,
+.detele-employee-container,
 .employee-update-container {
     padding: 20px;
 }
 
-.remove-btn {
-    margin-top: 10px;
-    width: 100%;
+    .employee-update-container .card-body {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .employee-update-container .alert, .role-map-container .alert {
+        background: rgb(255 150 77 / 20%);
+        border: 1px solid rgba(255, 150, 77, 0.2);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+.update-btn, .remove-btn {
+    width: 150px;
+    margin-bottom: 7px !important;
+    margin: auto;
 }
 
 .social-container {
@@ -366,7 +357,6 @@ button.new-emp-btn {
     width: 100%;
 }
 
-/* Styling for the social posts container */
 .social-posts-container {
     display: flex;
     flex-direction: column;
@@ -398,7 +388,6 @@ button.new-emp-btn {
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
     }
 
-/* Card styling */
 .social-posts-container .card {
     border: none;
     border-radius: 15px;
@@ -412,7 +401,6 @@ button.new-emp-btn {
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
     }
 
-/* Card body styling */
 .social-posts-container .card-body {
     padding: 20px;
 }
@@ -427,13 +415,11 @@ button.new-emp-btn {
     margin-bottom: 5px;
 }
 
-    /* Metadata styling */
     .social-posts-container .card-text small {
         color: #999;
         font-size: 0.9em;
     }
 
-/* Image styling */
 .social-posts-container img.img-fluid {
     height: 300px;
     width: 100%;
@@ -443,7 +429,6 @@ button.new-emp-btn {
     border: solid 1px #80808075;
 }
 
-/* Icons and Additional styling */
 .social-posts-container .post-meta-icons {
     display: flex;
     gap: 10px;
@@ -461,7 +446,7 @@ button.new-emp-btn {
             color: #007bff;
         }
 
-.post-delete-span:hover{
+.post-delete-span:hover {
     color: #ff2020 !important;
 }
 
@@ -505,7 +490,6 @@ h1 {
         color: #4CAF50;
     }
 
-/* Filter Section Styling */
 .filter-section {
     display: flex;
     align-items: end;
@@ -546,7 +530,6 @@ h1 {
         background-color: #45a049;
     }
 
-/* Employee List Styling */
 .employee-list table {
     width: 100%;
     border-collapse: collapse;
@@ -569,7 +552,6 @@ h1 {
     cursor: pointer;
 }
 
-/* Generate Button Styling */
 .generate-section {
     margin-top: 20px;
     display: flex;
@@ -606,7 +588,6 @@ h1 {
         background-color: #262525;
     }
 
-    /* Disabled state styling */
     .nav-buttons:disabled {
         background-color: #ccc;
         color: #666;
@@ -644,21 +625,19 @@ h1 {
     background: #ff000015;
 }
 
-/* Basic Styles for Popup Overlay */
 .coming-soon-popup {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+    background: rgba(0, 0, 0, 0.6);
     z-index: 1000;
     justify-content: center;
     align-items: center;
 }
 
-/* Popup Content Styles */
 .popup-content {
     box-sizing: border-box;
     background: #ffffff;
@@ -676,7 +655,6 @@ h1 {
     animation: popupAnimation 0.4s ease-out;
 }
 
-/* Close Button Style */
 .close-btn {
     position: absolute;
     top: 10px;
@@ -690,7 +668,6 @@ h1 {
         color: #333;
     }
 
-/* Header and Paragraph Styles */
 .popup-content h2 {
     color: #4a90e2;
     font-size: 24px;
@@ -705,7 +682,6 @@ h1 {
     margin: 0;
 }
 
-/* Popup Animation */
 @keyframes popupAnimation {
     from {
         transform: scale(0.7);
@@ -760,3 +736,98 @@ h1 {
     display: flex;
     justify-content: center;
 }
+
+.employee-card-container .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+    .employee-card-container .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+.employee-card-container .card-title {
+    font-size: 1.2rem;
+}
+
+.employee-card-container .card-text {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.employee-card-container .employee-card {
+    width: 100%;
+}
+
+.employee-card-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+}
+
+.contact-container {
+    padding: 20px 40px;
+    text-align: center;
+    background: rgb(165 168 189 / 20%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+    .contact-container h2 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .contact-container p {
+        font-size: 1.1rem;
+        color: #555;
+        margin-bottom: 2rem;
+    }
+
+    .contact-container form .form-group {
+        position: relative;
+        margin-bottom: 1.3rem;
+    }
+
+    .contact-container input, .contact-container textarea {
+        border: none;
+        border-bottom: 2px solid #ddd;
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+        outline: none;
+    }
+
+        .contact-container input:focus, .contact-container textarea:focus {
+            border-color: #007bff;
+        }
+
+    .contact-container .btn {
+        background: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 8px;
+        transition: background 0.3s ease;
+    }
+
+        .contact-container .btn:hover {
+            background: #0056b3;
+        }
+
+    .contact-container .social-icons a {
+        font-size: 1.5rem;
+        margin: 0 10px;
+        transition: color 0.3s;
+    }
+
+        .contact-container .social-icons a:hover {
+            color: #0056b3;
+        }

@@ -61,7 +61,7 @@ namespace EmployeePortal.Services.Services
         public SalaryDto GetEmployeeSalary(string employeeEmail, string duration)
         {
             var salary = _repository.GetEmployeeSalary(employeeEmail, duration);
-            
+
             var salaryDto = new SalaryDto
             {
                 EmployeeEmail = employeeEmail,

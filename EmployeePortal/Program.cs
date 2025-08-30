@@ -1,11 +1,11 @@
-using EmployeePortal.Services.Services;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using EmployeePortal.Core.Interfaces;
 using EmployeePortal.Data.Data;
 using EmployeePortal.Data.Repositories;
+using EmployeePortal.Services.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using DinkToPdf.Contracts;
-using DinkToPdf;
 
 var builder = WebApplication.CreateBuilder(args);
 

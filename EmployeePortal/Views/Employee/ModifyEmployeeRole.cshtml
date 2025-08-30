@@ -14,7 +14,7 @@
             <!-- Dropdown for selecting employees -->
             <div class="input-group role-map">
                 <label for="employeeSelect">Select Employee:</label>
-                <select id="employeeSelect" class="form-select role-map-select">
+                <select id="employeeSelect" class="form-select">
                     <option value="">-- Select Employee --</option>
                     @foreach (var employee in Model.Employees)
                     {
@@ -24,13 +24,13 @@
             </div>
 
             <!-- Search box for employee -->
-            <div class="input-group">
+            <div class="input-group employee-search mt-2">
                 <input type="text" id="employeeSearch" class="form-control" placeholder="Search Employee by Name or Email" />
-                <button id="searchButton" class="btn btn-primary role-modify-submit">Search</button>
+                <button id="searchButton" class="btn btn-primary">Search</button>
             </div>
 
             <!-- Employee Details Card -->
-            <div id="employeeDetails" class="card" style="display: none;">
+            <div id="employeeDetails" class="card mt-2" style="display: none;">
                 <div class="card-body">
                     <h5 class="card-title" id="employeeName"></h5>
                     <p class="card-text" id="employeeAddress"></p>
@@ -39,9 +39,9 @@
                     <p class="card-text" id="employeeDepartment"></p>
                     <p class="card-text" id="employeeRole"></p>
                 </div>
-                <div class="input-group change-role">
+                <div class="input-group change-role mb-2">
                     <label for="roleSelect">Change Role:</label>
-                    <div class="change-role-inner">
+                    <div class="change-role-inner gap-2">
                         <select id="roleSelect" class="form-select">
                             <option value="">-- Select Role --</option>
                             @foreach (var role in Model.Roles)
@@ -49,7 +49,7 @@
                                 <option value="@role.RoleName">@role.RoleName</option>
                             }
                         </select>
-                        <button id="submitButton" class="btn btn-primary role-modify-submit">Submit</button>
+                        <button id="submitButton" class="btn btn-primary">Submit</button>
                     </div>                    
                 </div>
             </div>

@@ -1,5 +1,4 @@
-﻿using EmployeePortal.Core.DTOs;
-using EmployeePortal.Core.Models;
+﻿using EmployeePortal.Core.Models;
 
 namespace EmployeePortal.Core.Interfaces
 {

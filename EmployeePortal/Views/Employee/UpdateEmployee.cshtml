@@ -12,7 +12,7 @@
             </div>
 
             <!-- Dropdown for selecting employees -->
-            <div class="input-group role-map">
+            <div class="input-group role-map mb-2">
                 <label for="employeeSelect">Select Employee:</label>
                 <select id="employeeSelect" class="form-select">
                     <option value="">-- Select Employee --</option>
@@ -24,13 +24,14 @@
             </div>
 
             <!-- Search box for employee -->
-            <div class="input-group">
+            <div class="input-group employee-search">
                 <input type="text" id="employeeSearch" class="form-control" placeholder="Search Employee by Name or Email" />
-                <button id="searchButton" class="btn btn-primary role-modify-submit">Search</button>
+                <button id="searchButton" class="btn btn-primary">Search</button>
             </div>
 
             <!-- Employee Details Form -->
-            <form id="employeeUpdateForm" style="display: none;" method="post" asp-action="UpdateEmployee" enctype="multipart/form-data">
+            <form id="employeeUpdateForm" style="display: none;" class="mt-2" method="post" asp-action="UpdateEmployee" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
                 @if (!ViewData.ModelState.IsValid)
                 {
                     <div class="validation-summary-errors">
@@ -41,51 +42,50 @@
                     </div>
                 }
                 <div class="card">
-                    <div class="card-body">
-                        <div class="input-group align-items-center">
+                    <div class="card-body d-grid gap-2">
+                        <div class="align-items-center p-1">
                             <label asp-for="SelectedEmployee.FirstName"></label>
                             <input asp-for="SelectedEmployee.FirstName" id="firstName" class="form-control" required />
                         </div>
-                        <div class="input-group align-items-center">
+                        <div class="align-items-center p-1">
                             <label asp-for="SelectedEmployee.LastName"></label>
                             <input asp-for="SelectedEmployee.LastName" id="lastName" class="form-control" required />
                         </div>
-                        <div class="input-group align-items-center">
+                        <div class="align-items-center p-1">
                             <label asp-for="SelectedEmployee.Gender"></label>
-                            <select asp-for="SelectedEmployee.Gender" id="gender" asp-items="ViewBag.Genders" class="department-select flex-1" required>
+                            <select asp-for="SelectedEmployee.Gender" id="gender" asp-items="ViewBag.Genders" class="department-select flex-1 h-auto" required>
                                 <option value="">Gender</option>
                             </select>
                         </div>
-                        <div class="input-group align-items-center">
+                        <div class="align-items-center p-1">
                             <label asp-for="SelectedEmployee.ProfilePicture"></label>
                             <input asp-for="SelectedEmployee.ProfilePicture" name="imageUpload" id="profilePicture" type="file" accept="image/*" class="form-control" />
                         </div>
-                        <div class="input-group align-items-center">
+                        <div class="align-items-center p-1">
                             <label asp-for="SelectedEmployee.EmailAddress"></label>
                             <input asp-for="SelectedEmployee.EmailAddress" id="emailAddress" type="email" class="form-control" required disabled />
                         </div>
-                        <input type="hidden" id="emailHidden" name="emailAddress"/>
-                        <div class="input-group align-items-center">
+                        <input type="hidden" id="emailHidden" name="emailAddress" />
+                        <div class="align-items-center p-1">
                             <label asp-for="SelectedEmployee.MobileNumber"></label>
                             <input asp-for="SelectedEmployee.MobileNumber" id="mobileNumber" class="form-control" />
                         </div>
-                        <div class="input-group align-items-center">
+                        <div class="align-items-center p-1">
                             <label asp-for="SelectedEmployee.Address"></label>
                             <input asp-for="SelectedEmployee.Address" id="address" class="form-control" required />
                         </div>
-                        <div class="input-group align-items-center">
+                        <div class="align-items-center p-1">
                             <label asp-for="SelectedEmployee.Department"></label>
                             <select asp-for="SelectedEmployee.Department" id="department" asp-items="ViewBag.Departments" class="flex-1">
                                 <option value="">--Select Department--</option>
                             </select>
                         </div>
-                        <div class="input-group align-items-center">
+                        <div class="align-items-center p-1">
                             <label asp-for="SelectedEmployee.Salary"></label>
                             <input asp-for="SelectedEmployee.Salary" id="salary" type="number" class="form-control" />
                         </div>
-
-                        <button type="submit" class="btn btn-dark w-100">Update Details</button>
                     </div>
+                    <button type="submit" class="btn btn-dark update-btn">Update Details</button>
                 </div>
             </form>
         </div>

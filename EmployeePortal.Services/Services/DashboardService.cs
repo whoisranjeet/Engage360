@@ -2,7 +2,6 @@
 using EmployeePortal.Core.Interfaces;
 using EmployeePortal.Core.Models;
 using Microsoft.Extensions.Logging;
-using System.Security.Claims;
 
 namespace EmployeePortal.Services.Services
 {

@@ -1,5 +1,4 @@
-﻿using EmployeePortal.Core.DTOs;
-using EmployeePortal.Core.Interfaces;
+﻿using EmployeePortal.Core.Interfaces;
 using EmployeePortal.Core.Models;
 using EmployeePortal.Data.Data;
 
@@ -61,10 +60,10 @@ namespace EmployeePortal.Data.Repositories
         public List<string> GetAvailableDuration(string username)
         {
             var payrollDates = _context.Salaries.Where(s => s.EmployeeEmail == username).Select(s => s.PayrollDate).Distinct().ToList();
-            
-            if(payrollDates.Count > 0) { return payrollDates; }     
-            
-            return new List<string> {"No Data Found. !!!"};
+
+            if (payrollDates.Count > 0) { return payrollDates; }
+
+            return new List<string> { "No Data Found. !!!" };
         }
 
         public Salary GetEmployeeSalary(string employeeEmail, string duration)
