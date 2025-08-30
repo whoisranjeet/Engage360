@@ -21,3 +21,75 @@ $(function () {
         $(this).text(toSentenceCase(currentText));
     });
 });
+
+$(function () {
+    $(document).on("click", ".social-posts-container .post-delete-span", function () {
+        let postId = $(this).closest(".card").attr("id");
+
+        if (!postId) return;
+
+        if (!confirm("Are you sure you want to delete this post?")) return;
+
+        $.ajax({
+            url: '/Dashboard/DeletePost',
+            type: 'POST',
+            data: { id: postId }, 
+            success: function (response) {
+                $("#" + postId).remove();
+                alert("Post deleted successfully!");
+            },
+            error: function () {
+                alert("Something went wrong while deleting the post.");
+            }
+        });
+    });
+});
+
+$(function () {
+    $("#createPostForm").on("submit", function (e) {
+        e.preventDefault();
+
+        let formData = new FormData(this);
+        let token = $('input[name="__RequestVerificationToken"]').val();
+
+        $.ajax({
+            url: '/Dashboard/CreatePost',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                "RequestVerificationToken": token
+            },
+            success: function (response) {
+                console.log("Response:", response);
+                if (response.success) {
+                    let newCard = `
+                        <div id="${response.id}" class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">${response.title}</h5>
+                                <p class="card-text">${response.description}</p>
+                                ${response.image ? `<img src="${response.image}" class="img-fluid" />` : ""}
+                                <p class="card-text">
+                                    <small class="text-muted">Published by ${response.author} on ${response.date}</small>
+                                </p>
+                                <div class="post-meta-icons">
+                                    <span onclick="showComingSoonPopup()"><i class="fa fa-thumbs-up"></i> Like</span>
+                                    <span onclick="showComingSoonPopup()"><i class="fa fa-comment"></i> Comment</span>
+                                    <span onclick="showComingSoonPopup()"><i class="fa fa-share"></i> Share</span>
+                                    <span class="post-delete-span"><i class="fa fa-trash-can"></i> Delete</span>
+                                </div>
+                            </div>
+                        </div>`;
+                    $(".social-posts-container").prepend(newCard);
+                    $("#createPostForm")[0].reset();
+                    alert("Post created successfully!");
+                }
+            },
+            error: function (xhr) {
+                console.error("Error:", xhr);
+                alert("Error: " + xhr.status + " " + xhr.responseText);
+            }
+        });
+    });
+});

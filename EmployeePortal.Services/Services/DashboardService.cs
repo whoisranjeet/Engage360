@@ -39,5 +39,19 @@ namespace EmployeePortal.Services.Services
                 return false;
             }
         }
+
+        public bool DeletePost(Guid id)
+        {
+            try
+            {
+                _dashboardRepository.DeletePost(id);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error ocuured while deleting a social post.");
+                return false;
+            }
+        }
     }
 }

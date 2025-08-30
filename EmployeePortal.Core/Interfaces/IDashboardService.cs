@@ -5,5 +5,6 @@ namespace EmployeePortal.Core.Interfaces
     public interface IDashboardService
     {
         bool CreatePost(PostDto postDto);
+        bool DeletePost(Guid id);
     }
 }

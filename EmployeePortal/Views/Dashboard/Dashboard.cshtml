@@ -22,7 +22,8 @@
 <div class="card w-100">
     <div class="card-body">
         <h5 class="card-title">What's on your mind?</h5>
-        <form method="post" asp-action="Dashboard" enctype="multipart/form-data">
+        <form id="createPostForm" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
             <div class="form-group" style="margin-bottom:10px;">
                 <input asp-for="CreatePost.Title" type="text" class="form-control" placeholder="Title..." required>
             </div>
@@ -47,7 +48,7 @@
     <div class="social-posts-container">
         @foreach (var post in Model.Posts)
         {
-            <div class="card">
+            <div id="@post.Id" class="card">
                 <div class="card-body">
                     <h5 class="card-title">@post.Title</h5>
                     <p class="card-text">@post.Description</p>
@@ -65,7 +66,7 @@
                         <span onclick="showComingSoonPopup()"><i class="fa fa-share"></i> Share</span>
                         @if (User.IsInRole("Social Admin") || post.Author == User.Identity.Name)
                         {
-                            <span onclick="showComingSoonPopup()" class="post-delete-span"><i class="fa fa-trash-can"></i> Delete</span>
+                            <span class="post-delete-span"><i class="fa fa-trash-can"></i> Delete</span>
                         }
                     </div>
                 </div>

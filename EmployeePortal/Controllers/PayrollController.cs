@@ -1,13 +1,11 @@
 ﻿using DinkToPdf;
 using DinkToPdf.Contracts;
-using EmployeePortal.Core.DTOs;
 using EmployeePortal.Core.Interfaces;
 using EmployeePortal.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Newtonsoft.Json;
 using System.Security.Claims;
 
 namespace EmployeePortal.Controllers

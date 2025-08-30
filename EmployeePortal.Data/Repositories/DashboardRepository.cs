@@ -29,5 +29,21 @@ namespace EmployeePortal.Data.Repositories
                 return false;
             }
         }
+
+        public bool DeletePost(Guid id)
+        {
+            try
+            {
+                var post = _context.Posts.FirstOrDefault(p => p.Id == id);
+                _context.Posts.Remove(post);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error ocuured while deleting a social post.");
+                return false;
+            }
+        }
     }
 }
