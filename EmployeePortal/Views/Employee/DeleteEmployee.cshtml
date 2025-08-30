@@ -12,9 +12,9 @@
             </div>
 
             <!-- Dropdown for selecting employees -->
-            <div class="input-group role-map">
+            <div class="input-group role-map mb-2">
                 <label for="employeeSelect">Select Employee:</label>
-                <select id="employeeSelect" class="form-select role-map-select">
+                <select id="employeeSelect" class="form-select">
                     <option value="">-- Select Employee --</option>
                     @foreach (var employee in Model)
                     {
@@ -24,13 +24,13 @@
             </div>
 
             <!-- Search box for employee -->
-            <div class="input-group">
+            <div class="input-group employee-search">
                 <input type="text" id="employeeSearch" class="form-control" placeholder="Search Employee by Name or Email" />
                 <button id="searchButton" class="btn btn-primary role-modify-submit">Search</button>
             </div>
 
             <!-- Employee Details Card -->
-            <div id="employeeDetails" style="display: none;">
+            <div id="employeeDetails" style="display: none;" class="mt-2">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title" id="employeeName"></h5>
@@ -39,8 +39,8 @@
                         <p class="card-text" id="employeeEmail"></p>
                         <p class="card-text" id="employeeDepartment"></p>
                     </div>
-                </div>
-                <button type="submit" id="deleteButton" class="btn btn-danger remove-btn">Remove</button>
+                    <button type="submit" id="deleteButton" class="btn btn-danger remove-btn">Remove</button>
+                </div>                
             </div>
         </div>
     </div>

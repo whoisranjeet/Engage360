@@ -1,5 +1,5 @@
-﻿using EmployeePortal.Core.Interfaces;
-using EmployeePortal.Core.DTOs;
+﻿using EmployeePortal.Core.DTOs;
+using EmployeePortal.Core.Interfaces;
 using EmployeePortal.Core.Models;
 
 namespace EmployeePortal.Services.Services

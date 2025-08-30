@@ -8,43 +8,43 @@
                 @Html.AntiForgeryToken()
                 <div class="new-emp-input-box">
                     <div class="new-emp-row">
-                        <div class="input-group">
+                        <div class="input-group p-1">
                             <label asp-for="FirstName"></label>
                             <input asp-for="FirstName" type="text" />
                             <span asp-validation-for="FirstName" class="text-danger"></span>
                         </div>
-                        <div class="input-group">
+                        <div class="input-group p-1">
                             <label asp-for="LastName"></label>
                             <input asp-for="LastName" type="text" />
                             <span asp-validation-for="LastName" class="text-danger"></span>
                         </div>
-                        <div class="input-group">
+                        <div class="input-group p-1">
                             <label asp-for="ProfilePicture"></label>
                             <input type="file" name="imageUpload" accept="image/*" class="form-control w-100">
                         </div>
-                        <div class="input-group">
+                        <div class="input-group p-1">
                             <label asp-for="Gender"></label>
-                            <select asp-for="Gender" asp-items="ViewBag.Genders" class="department-select">
+                            <select asp-for="Gender" asp-items="ViewBag.Genders" class="department-select h-auto">
                                 <option value="">Gender</option>
                             </select>
                             <span asp-validation-for="Gender" class="text-danger"></span>
                         </div>
-                        <div class="input-group">
+                        <div class="input-group p-1">
                             <label asp-for="EmailAddress"></label>
                             <input asp-for="EmailAddress" type="email" />
                             <span asp-validation-for="EmailAddress" class="text-danger"></span>
                         </div>
-                        <div class="input-group">
+                        <div class="input-group p-1">
                             <label asp-for="MobileNumber"></label>
                             <input asp-for="MobileNumber" type="text" />
                             <span asp-validation-for="MobileNumber" class="text-danger"></span>
                         </div>
-                        <div class="input-group">
+                        <div class="input-group p-1">
                             <label asp-for="Address"></label>
                             <input asp-for="Address" type="text" />
                             <span asp-validation-for="Address" class="text-danger"></span>
                         </div>
-                        <div class="input-group">
+                        <div class="input-group p-1">
                             <label asp-for="Department"></label>
                             <select asp-for="Department" asp-items="ViewBag.Departments" class="department-select">
                                 <option value="">Select Department</option>
@@ -54,7 +54,7 @@
                     </div>
                 </div>
 
-                <div class="new-emp-btns">
+                <div class="new-emp-btns p-1">
                     <button type="reset" class="new-emp-btn btn-secondary bg-secondary">Clear</button>
                     <button type="submit" class="new-emp-btn">Submit</button>
                 </div>

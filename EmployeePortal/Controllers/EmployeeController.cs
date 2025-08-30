@@ -1,13 +1,12 @@
 ﻿using EmployeePortal.Core.DTOs;
 using EmployeePortal.Core.Interfaces;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using EmployeePortal.ViewModel;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using EmployeePortal.Services.Services;
-using EmployeePortal.ViewModel;
+using System.Security.Claims;
 
 namespace EmployeePortal.Controllers
 {
@@ -69,7 +68,7 @@ namespace EmployeePortal.Controllers
         [HttpPost]
         [AllowAnonymous]
         public IActionResult UserSignUp(EmployeeDto employeeDto)
-        {           
+        {
             if (ModelState.IsValid)
             {
                 var generatedPassword = GeneratePassword(employeeDto.LastName);
@@ -228,6 +227,10 @@ namespace EmployeePortal.Controllers
             {
                 if (await _employeeService.RemoveEmployee(data.EmailAddress))
                 {
+                    if (data.EmailAddress == User.Identity.Name)
+                    {
+                        await UserSignOut();
+                    }
                     return Json(new { success = true });
                 }
             }

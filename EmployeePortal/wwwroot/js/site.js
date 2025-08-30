@@ -1,67 +1,95 @@
-﻿// Save the original alert function
-const originalAlert = window.alert;
-
-// Override the alert function
-window.alert = function (message) {
-    // Call the custom modal display function
-    showCustomAlert(message);
-};
-
-// Custom function to display the message
-function showCustomAlert(message) {
-    // Create the modal structure
-    let modal = document.createElement("div");
-    modal.classList.add("custom-alert");
-
-    let content = document.createElement("div");
-    content.classList.add("custom-alert-content");
-
-    let messageElem = document.createElement("p");
-    messageElem.textContent = message;
-    content.appendChild(messageElem);
-
-    let button = document.createElement("button");
-    button.textContent = "OK";
-    button.classList.add("btn-ok");
-    button.onclick = function () {
-        // Close the modal
-        document.body.removeChild(modal);
-    };
-    content.appendChild(button);
-
-    modal.appendChild(content);
-    document.body.appendChild(modal);
-}
-
-// Function to display the popup
+﻿// Function to display the comingSoonPopup
 function showComingSoonPopup() {
     document.getElementById("comingSoonPopup").style.display = "flex";
 }
 
-// Function to close the popup
+// Function to close the comingSoonPopup
 function closePopup() {
     document.getElementById("comingSoonPopup").style.display = "none";
 }
 
-// SignIn SignUp Toggle
-const signInTab = document.getElementById("signInTab");
-const signUpTab = document.getElementById("signUpTab");
-const signInForm = document.getElementById("signInForm");
-const signUpForm = document.getElementById("signUpForm");
-const formHeading = document.getElementById("formHeading");
+// jQuery: Convert to true sentence case
+function toSentenceCase(text) {
+    if (!text) return "";
+    text = text.trim();
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+}
 
-signInTab.addEventListener("click", () => {
-signInTab.classList.add("active");
-signUpTab.classList.remove("active");
-signInForm.classList.add("active");
-signUpForm.classList.remove("active");
-formHeading.textContent = "Welcome back";
+$(function () {
+    $(".social-posts-container p.card-text").each(function () {
+        let currentText = $(this).text();
+        $(this).text(toSentenceCase(currentText));
+    });
 });
 
-signUpTab.addEventListener("click", () => {
-signUpTab.classList.add("active");
-signInTab.classList.remove("active");
-signUpForm.classList.add("active");
-signInForm.classList.remove("active");
-formHeading.textContent = "Create an account";
+$(function () {
+    $(document).on("click", ".social-posts-container .post-delete-span", function () {
+        let postId = $(this).closest(".card").attr("id");
+
+        if (!postId) return;
+
+        if (!confirm("Are you sure you want to delete this post?")) return;
+
+        $.ajax({
+            url: '/Dashboard/DeletePost',
+            type: 'POST',
+            data: { id: postId }, 
+            success: function (response) {
+                $("#" + postId).remove();
+                alert("Post deleted successfully!");
+            },
+            error: function () {
+                alert("Something went wrong while deleting the post.");
+            }
+        });
+    });
+});
+
+$(function () {
+    $("#createPostForm").on("submit", function (e) {
+        e.preventDefault();
+
+        let formData = new FormData(this);
+        let token = $('input[name="__RequestVerificationToken"]').val();
+
+        $.ajax({
+            url: '/Dashboard/CreatePost',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                "RequestVerificationToken": token
+            },
+            success: function (response) {
+                console.log("Response:", response);
+                if (response.success) {
+                    let newCard = `
+                        <div id="${response.id}" class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">${response.title}</h5>
+                                <p class="card-text">${response.description}</p>
+                                ${response.image ? `<img src="${response.image}" class="img-fluid" />` : ""}
+                                <p class="card-text">
+                                    <small class="text-muted">Published by ${response.author} on ${response.date}</small>
+                                </p>
+                                <div class="post-meta-icons">
+                                    <span onclick="showComingSoonPopup()"><i class="fa fa-thumbs-up"></i> Like</span>
+                                    <span onclick="showComingSoonPopup()"><i class="fa fa-comment"></i> Comment</span>
+                                    <span onclick="showComingSoonPopup()"><i class="fa fa-share"></i> Share</span>
+                                    <span class="post-delete-span"><i class="fa fa-trash-can"></i> Delete</span>
+                                </div>
+                            </div>
+                        </div>`;
+                    $(".social-posts-container").prepend(newCard);
+                    $("#createPostForm")[0].reset();
+                    alert("Post created successfully!");
+                }
+            },
+            error: function (xhr) {
+                console.error("Error:", xhr);
+                alert("Error: " + xhr.status + " " + xhr.responseText);
+            }
+        });
+    });
 });

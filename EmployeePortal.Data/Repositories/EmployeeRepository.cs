@@ -1,11 +1,8 @@
-﻿using EmployeePortal.Core.Models;
-using EmployeePortal.Core.Interfaces;
+﻿using EmployeePortal.Core.Interfaces;
+using EmployeePortal.Core.Models;
 using EmployeePortal.Data.Data;
-using Microsoft.Extensions.Logging;
-using System.Data;
 using Microsoft.EntityFrameworkCore;
-using EmployeePortal.Core.DTOs;
-using System.Net.Mail;
+using Microsoft.Extensions.Logging;
 
 namespace EmployeePortal.Data.Repositories
 {
@@ -117,7 +114,7 @@ namespace EmployeePortal.Data.Repositories
         public Employee GetEmployeeDetails(string emailAddress)
         {
             var employee = _context.Employees.FirstOrDefault(emp => emp.EmailAddress == emailAddress);
-            
+
             if (employee != null)
             {
                 return employee;
@@ -131,19 +128,19 @@ namespace EmployeePortal.Data.Repositories
             try
             {
                 var employee = _context.Employees.FirstOrDefault(emp => emp.EmailAddress == emailAddress);
-                
+
                 employee.FirstName = emp.FirstName;
                 employee.LastName = emp.LastName;
                 employee.MobileNumber = emp.MobileNumber;
                 employee.Address = emp.Address;
                 employee.Department = emp.Department;
-                employee.Gender = emp.Gender;                
+                employee.Gender = emp.Gender;
                 employee.Salary = emp.Salary;
 
                 if (emp.ProfilePicture != null)
                 {
                     employee.ProfilePicture = emp.ProfilePicture;
-                }                    
+                }
 
                 _context.Employees.Update(employee);
                 _context.SaveChanges();

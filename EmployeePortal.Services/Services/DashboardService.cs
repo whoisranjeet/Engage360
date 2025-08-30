@@ -2,7 +2,6 @@
 using EmployeePortal.Core.Interfaces;
 using EmployeePortal.Core.Models;
 using Microsoft.Extensions.Logging;
-using System.Security.Claims;
 
 namespace EmployeePortal.Services.Services
 {
@@ -36,6 +35,20 @@ namespace EmployeePortal.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error ocuured while creating a social post.");
+                return false;
+            }
+        }
+
+        public bool DeletePost(Guid id)
+        {
+            try
+            {
+                _dashboardRepository.DeletePost(id);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error ocuured while deleting a social post.");
                 return false;
             }
         }

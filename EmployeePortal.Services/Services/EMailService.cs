@@ -1,7 +1,7 @@
 ﻿using EmployeePortal.Core.Interfaces;
-using System.Net.Mail;
-using System.Net;
 using Microsoft.Extensions.Logging;
+using System.Net;
+using System.Net.Mail;
 
 namespace EmployeePortal.Services.Services
 {
