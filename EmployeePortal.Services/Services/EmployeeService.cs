@@ -1,6 +1,7 @@
 ﻿using EmployeePortal.Core.DTOs;
 using EmployeePortal.Core.Interfaces;
 using EmployeePortal.Core.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeePortal.Services.Services
 {
@@ -126,6 +127,11 @@ namespace EmployeePortal.Services.Services
             }).ToList();
 
             return usersDtos;
+        }
+
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            return await _employeeRepository.GetUserByEmailAsync(email);
         }
 
         public bool ModifyEmployeeRole(string EmailAddress, string RoleName)

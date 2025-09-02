@@ -22,6 +22,7 @@ namespace EmployeePortal.Controllers
         }
 
         [HttpGet]
+        [Route("Dashboard")]
         public async Task<IActionResult> Dashboard()
         {
             var posts = await _context.Posts

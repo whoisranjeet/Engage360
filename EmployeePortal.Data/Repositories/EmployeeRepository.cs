@@ -67,6 +67,11 @@ namespace EmployeePortal.Data.Repositories
             return _context.Users.ToList();
         }
 
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Username.ToLower() == email.ToLower());
+        }
+
         public bool ModifyEmployeeRole(string EmailAddress, string RoleName)
         {
             try

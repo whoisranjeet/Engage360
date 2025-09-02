@@ -1,5 +1,6 @@
 ﻿using EmployeePortal.Core.DTOs;
 using EmployeePortal.Core.Interfaces;
+using EmployeePortal.Core.Models;
 using EmployeePortal.ViewModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -25,11 +26,11 @@ namespace EmployeePortal.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult UserSignIn()
+        public IActionResult SignIn()
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Dashboard", "Dashboard");
+                return RedirectToAction("Dashboard");
             }
             return View();
         }
@@ -37,37 +38,30 @@ namespace EmployeePortal.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public IActionResult UserSignIn(UserDto userDto)
+        public IActionResult SignIn(UserDto userDto)
         {
             if (ModelState.IsValid)
             {
                 if (_employeeService.UserSignIn(userDto))
                 {
                     LogUserIn(userDto);
-                    return RedirectToAction("Dashboard", "Dashboard");
+                    return RedirectToAction("Dashboard");
                 }
                 ModelState.AddModelError("Error: ", "Invalid username or password.");
             }
             return View(userDto);
         }
 
-        public async Task<IActionResult> UserSignOut()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("UserSignIn");
-        }
-
-        [Route("SignUp")]
         [AllowAnonymous]
-        public IActionResult UserSignUp()
+        public IActionResult SignUp()
         {
             return View();
         }
 
-        [Route("SignUp")]
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult UserSignUp(EmployeeDto employeeDto)
+        [ValidateAntiForgeryToken]
+        public IActionResult SignUp(EmployeeDto employeeDto)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +81,7 @@ namespace EmployeePortal.Controllers
                     if (_employeeService.UserSignIn(userDto))
                     {
                         LogUserIn(userDto);
-                        return RedirectToAction("Dashboard", "Dashboard");
+                        return RedirectToAction("Dashboard");
                     }
                 }
             }
@@ -95,31 +89,7 @@ namespace EmployeePortal.Controllers
             return View(employeeDto);
         }
 
-        public async void LogUserIn(UserDto userDto)
-        {
-            var user = _employeeService.GetAllUsers().FirstOrDefault(user => user.Username == userDto.Username);
-            var role = user != null ? _employeeService.GetAllRoles().FirstOrDefault(role => role.Id == user.RoleId) : null;
-
-            var claims = new List<Claim>
-            {
-                new(ClaimTypes.Name, user.Username),
-                new(ClaimTypes.Role, role.RoleName)
-            };
-
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-            var authProperties = new AuthenticationProperties
-            {
-                IsPersistent = false,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60)
-            };
-
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity),
-                authProperties);
-        }
-
+        [HttpGet]
         [Route("New-Employee")]
         public IActionResult AddEmployee()
         {
@@ -129,8 +99,9 @@ namespace EmployeePortal.Controllers
             return View();
         }
 
-        [Route("New-Employee")]
         [HttpPost]
+        [Route("New-Employee")]
+        [ValidateAntiForgeryToken]
         public IActionResult AddEmployee(EmployeeDto employeeDto, IFormFile imageUpload)
         {
             if (imageUpload != null && imageUpload.Length > 0)
@@ -155,7 +126,7 @@ namespace EmployeePortal.Controllers
                 _emailService.SendEmailUsingGmail(employeeDto.EmailAddress, "Your account has been setup. : Engage360", emailBody);
 
                 TempData["SuccessMessage"] = "Employee Details Added Successfully !!!";
-                return RedirectToAction("Dashboard", "Dashboard");
+                return RedirectToAction("Dashboard");
             }
 
             ViewBag.Departments = new SelectList(_portalHelper.GetAllDepartment());
@@ -164,20 +135,7 @@ namespace EmployeePortal.Controllers
             return View(employeeDto);
         }
 
-        private string GeneratePassword(string lastName)
-        {
-            if (string.IsNullOrEmpty(lastName) || lastName.Length < 3)
-            {
-                throw new ArgumentException("LastName must have at least 3 characters for password generation.");
-            }
-
-            var namePart = char.ToUpper(lastName[0]) + lastName.Substring(1, 2).ToLower();
-            var monthPart = DateTime.Now.ToString("MMM");
-            var yearPart = DateTime.Now.ToString("yy");
-
-            return $"{namePart}@{monthPart}{yearPart}";
-        }
-
+        [HttpGet]
         [Route("My-Organization")]
         public IActionResult GetAllEmployee()
         {
@@ -185,6 +143,7 @@ namespace EmployeePortal.Controllers
             return View(employees);
         }
 
+        [HttpGet]
         [Route("Modify-Role")]
         public IActionResult ModifyEmployeeRole()
         {
@@ -201,6 +160,7 @@ namespace EmployeePortal.Controllers
 
         [HttpPost]
         [Route("Modify-Role")]
+        [ValidateAntiForgeryToken]
         public IActionResult ModifyEmployeeRole([FromBody] RoleMappingDto data)
         {
             if (data.EmailAddress != string.Empty && data.RoleName != string.Empty)
@@ -213,6 +173,7 @@ namespace EmployeePortal.Controllers
             return Json(new { success = false });
         }
 
+        [HttpGet]
         [Route("Delete-Employee")]
         public IActionResult DeleteEmployee()
         {
@@ -237,7 +198,7 @@ namespace EmployeePortal.Controllers
             return Json(new { success = false });
         }
 
-
+        [HttpGet]
         [Route("Update-Employee")]
         public IActionResult UpdateEmployee()
         {
@@ -270,7 +231,7 @@ namespace EmployeePortal.Controllers
 
             if (_employeeService.UpdateEmployeeDetails(model.SelectedEmployee, emailAddress))
             {
-                return RedirectToAction("Dashboard", "Dashboard");
+                return RedirectToAction("Dashboard");
             }
 
             var viewModel = new UpdateEmployeeViewModel
@@ -283,6 +244,99 @@ namespace EmployeePortal.Controllers
             ViewBag.Genders = new SelectList(_portalHelper.GetAllGender());
 
             return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> HandleGoogleSignInUpAsync()
+        {
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            var user = _employeeService.GetAllUsers().FirstOrDefault(user => user.Username == email);
+
+            if (user != null)
+            {
+                LogUserIn(user);
+                return RedirectToAction("Dashboard");
+            }
+            else
+            {
+                var firstName = User.FindFirst(ClaimTypes.GivenName)?.Value;
+                var lastName = User.FindFirst(ClaimTypes.Surname)?.Value;
+                var generatedPassword = GeneratePassword(lastName);
+
+                var employeeDto = new EmployeeDto()
+                {
+                    FirstName = firstName,
+                    LastName = lastName,
+                    EmailAddress = email,
+                    Password = generatedPassword
+                };
+
+                if (_employeeService.UserSignUp(employeeDto))
+                {
+                    string emailBody = string.Format("Your account has been set up in our system.\nLogin Details:\nUsername: {0}\nPassword: {1}", employeeDto.EmailAddress, generatedPassword);
+                    _emailService.SendEmailUsingGmail(employeeDto.EmailAddress, "Your account has been setup. : Engage360", emailBody);
+
+                    UserDto userDto = new()
+                    {
+                        Username = employeeDto.EmailAddress,
+                        Password = employeeDto.Password
+                    };
+                    if (_employeeService.UserSignIn(userDto))
+                    {
+                        LogUserIn(userDto);
+                        return RedirectToAction("Dashboard");
+                    }
+                }
+            }
+            await UserSignOut();
+            return RedirectToAction("Employee", "SignIn");
+        }
+
+        //Funtions for different responsibilities.
+
+        public async void LogUserIn(UserDto userDto)
+        {
+            var user = _employeeService.GetAllUsers().FirstOrDefault(user => user.Username == userDto.Username);
+            var role = user != null ? _employeeService.GetAllRoles().FirstOrDefault(role => role.Id == user.RoleId) : null;
+
+            var claims = new List<Claim>
+            {
+                new(ClaimTypes.Name, user.Username),
+                new(ClaimTypes.Role, role.RoleName)
+            };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = false,
+                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60)
+            };
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties);
+        }
+
+        public async Task<IActionResult> UserSignOut()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Employee", "SignIn");
+        }
+
+        private string GeneratePassword(string lastName)
+        {
+            if (string.IsNullOrEmpty(lastName) || lastName.Length < 3)
+            {
+                throw new ArgumentException("LastName must have at least 3 characters for password generation.");
+            }
+
+            var namePart = char.ToUpper(lastName[0]) + lastName.Substring(1, 2).ToLower();
+            var monthPart = DateTime.Now.ToString("MMM");
+            var yearPart = DateTime.Now.ToString("yy");
+
+            return $"{namePart}@{monthPart}{yearPart}";
         }
     }
 }
