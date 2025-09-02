@@ -13,7 +13,6 @@ namespace EmployeePortal.Core.Models
         public byte[] ProfilePicture { get; set; }
         [Required]
         public string EmailAddress { get; set; }
-        [Required]
         public string MobileNumber { get; set; }
         public string Address { get; set; }
         public string Department { get; set; }

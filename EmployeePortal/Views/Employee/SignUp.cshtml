@@ -23,17 +23,8 @@
                 </div>
             </div>
             <h5 class="mb-3 text-center">Create an account</h5>
-            <form method="post" asp-action="UserSignUp" enctype="multipart/form-data">
+            <form method="post" asp-action="SignUp" enctype="multipart/form-data">
                 @Html.AntiForgeryToken()
-                @* @if (!ViewData.ModelState.IsValid)
-                {
-                    <div class="validation-summary-errors">
-                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                        {
-                            <p>@error.ErrorMessage</p>
-                        }
-                    </div>
-                } *@
                 <div class="d-flex mb-2 justify-content-between gap-2">
                     <div class="input-group">
                         <input asp-for="FirstName" type="text" placeholder="First name" required />
@@ -53,7 +44,7 @@
                 </div>
                 <div class="or">OR SIGN UP WITH</div>
                 <div class="d-flex gap-2 justify-content-between">
-                    <button type="button" onclick="showComingSoonPopup()" class="flex-1 social-button"><img src="~/img/G.svg" class="social-icon" alt="Google Logo" /></button>
+                    <button type="button" onclick="location.href='/GoogleSignInUp'" class="flex-1 social-button"><img src="~/img/G.svg" class="social-icon" alt="Google Logo" /></button>
                     <button type="button" onclick="showComingSoonPopup()" class="flex-1 social-button"><img src="~/img/F.svg" class="social-icon" alt="Facebook Logo" /></button>
                     <button type="button" onclick="showComingSoonPopup()" class="flex-1 social-button"><img src="~/img/X.svg" class="social-icon" alt="X Logo" /></button>
                 </div>

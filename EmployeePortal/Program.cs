@@ -61,7 +61,7 @@ app.UseAuthorization();
 app.MapGet("/GoogleSignInUp", async context =>
 {
     await context.ChallengeAsync(GoogleDefaults.AuthenticationScheme,
-        new AuthenticationProperties { RedirectUri = "/Employee/HandleGoogleSignInUpAsync" });
+        new AuthenticationProperties { RedirectUri = "/HandleGoogleSignInUpAsync" });
 });
 
 app.MapControllerRoute(

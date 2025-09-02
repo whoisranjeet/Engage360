@@ -78,7 +78,6 @@ namespace EmployeePortal.Controllers
             return BadRequest(new { success = false, message = "Could not create post." });
         }
 
-
         [HttpPost]
         public IActionResult DeletePost(Guid id)
         {
@@ -92,7 +91,7 @@ namespace EmployeePortal.Controllers
             return BadRequest(new { success = false, message = "Could not delete post." });
         }
 
-        [Route("Contact Us")]
+        [Route("Contact-Us")]
         public IActionResult ContactUs()
         {
             return View();

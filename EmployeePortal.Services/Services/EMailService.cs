@@ -8,9 +8,9 @@ namespace EmployeePortal.Services.Services
     public class EMailService : IEmailService
     {
         private readonly ILogger<EMailService> _logger;
-        private const string _emailSender = "rkfunworld69@gmail.com";
-        private const string _senderName = "Ranjeet Karmakar";
-        private const string _emailSecret = "gcot mexr dzny ctxl";
+        private const string _emailSender = "mail.engage360@gmail.com";
+        private const string _senderName = "Engage360-Support";
+        private const string _emailSecret = "zfcw scmy rtks tqcf";
 
         public EMailService(ILogger<EMailService> logger)
         {
