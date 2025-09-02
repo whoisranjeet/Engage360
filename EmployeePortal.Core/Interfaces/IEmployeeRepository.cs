@@ -11,6 +11,7 @@ namespace EmployeePortal.Core.Interfaces
         List<Employee> GetAllEmployees();
         List<Role> GetAllRoles();
         List<User> GetAllUsers();
+        Task<User> GetUserByEmailAsync(string email);
         bool ModifyEmployeeRole(string EmailAddress, string RoleName);
         Task<bool> RemoveEmployee(string EmailAddress);
         Employee GetEmployeeDetails(string EmailAddress);

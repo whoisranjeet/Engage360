@@ -1,4 +1,5 @@
 ﻿using EmployeePortal.Core.DTOs;
+using EmployeePortal.Core.Models;
 
 namespace EmployeePortal.Core.Interfaces
 {
@@ -11,6 +12,7 @@ namespace EmployeePortal.Core.Interfaces
         List<EmployeeDto> GetAllEmployees();
         List<RoleDto> GetAllRoles();
         List<UserDto> GetAllUsers();
+        Task<User> GetUserByEmailAsync(string email);
         bool ModifyEmployeeRole(string EmailAddress, string RoleName);
         Task<bool> RemoveEmployee(string EmailAddress);
         EmployeeDto GetEmployeeDetails(string EmailAddress);

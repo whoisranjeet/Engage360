@@ -10,7 +10,7 @@ namespace EmployeePortal.Services.Services
         private readonly ILogger<EMailService> _logger;
         private const string _emailSender = "rkfunworld69@gmail.com";
         private const string _senderName = "Ranjeet Karmakar";
-        private const string _formPassword = "gcot mexr dzny ctxl";
+        private const string _emailSecret = "gcot mexr dzny ctxl";
 
         public EMailService(ILogger<EMailService> logger)
         {
@@ -21,7 +21,7 @@ namespace EmployeePortal.Services.Services
         {
             var fromAddress = new MailAddress(_emailSender, _senderName);
             var toAddress = new MailAddress(toEmail);
-            const string fromPassword = _formPassword;
+            const string emailSecret = _emailSecret;
 
             var smtp = new SmtpClient
             {
@@ -30,7 +30,7 @@ namespace EmployeePortal.Services.Services
                 EnableSsl = true,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+                Credentials = new NetworkCredential(fromAddress.Address, emailSecret)
             };
             try
             {
