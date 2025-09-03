@@ -40,7 +40,7 @@ namespace EmployeePortal.Controllers
             return View();
         }
 
-        [Route("Generate Payroll")]
+        [Route("Generate-Payroll")]
         public IActionResult GeneratePayroll()
         {
             ViewBag.Departments = new SelectList(_portalHelper.GetAllDepartment());
