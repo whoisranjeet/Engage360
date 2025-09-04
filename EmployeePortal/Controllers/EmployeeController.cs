@@ -118,12 +118,29 @@ namespace EmployeePortal.Controllers
             return View(employeeDto);
         }
 
+        //[HttpGet]
+        //[Route("My-Organization")]
+        //public IActionResult GetAllEmployee()
+        //{
+        //    var employees = _employeeService.GetAllEmployees();
+        //    return View(employees);
+        //}
+
+        // Loads only the view
         [HttpGet]
         [Route("My-Organization")]
         public IActionResult GetAllEmployee()
         {
-            var employees = _employeeService.GetAllEmployees();
-            return View(employees);
+            return View();
+        }
+
+        // API endpoint for infinite scroll (AJAX call)
+        [HttpGet]
+        [Route("api/employees")]
+        public IActionResult GetEmployees(int page = 1, int pageSize = 10)
+        {
+            var employees = _employeeService.GetEmployeesPaged(page, pageSize);
+            return Json(employees);
         }
 
         [HttpGet]

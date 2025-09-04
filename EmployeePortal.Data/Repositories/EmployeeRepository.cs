@@ -1,4 +1,5 @@
-﻿using EmployeePortal.Core.Interfaces;
+﻿using EmployeePortal.Core.DTOs;
+using EmployeePortal.Core.Interfaces;
 using EmployeePortal.Core.Models;
 using EmployeePortal.Data.Data;
 using Microsoft.EntityFrameworkCore;
@@ -157,6 +158,25 @@ namespace EmployeePortal.Data.Repositories
                 _logger.LogError(ex, "An error ocuured during modifying user role.");
                 return false;
             }
+        }
+
+        public IEnumerable<EmployeeDto> GetEmployeesPaged(int page, int pageSize)
+        {
+            return _context.Employees
+               .OrderBy(e => e.FirstName)
+               .Skip((page - 1) * pageSize)
+               .Take(pageSize)
+               .Select(e => new EmployeeDto
+               {
+                   FirstName = e.FirstName,
+                   LastName = e.LastName,
+                   Gender = e.Gender,
+                   ProfilePicture = e.ProfilePicture,
+                   EmailAddress = e.EmailAddress,
+                   MobileNumber = e.MobileNumber,
+                   Address = e.Address,
+                   Department = e.Department
+               }).ToList();
         }
     }
 }

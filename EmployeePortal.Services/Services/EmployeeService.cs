@@ -192,5 +192,10 @@ namespace EmployeePortal.Services.Services
 
             return false;
         }
+
+        public IEnumerable<EmployeeDto> GetEmployeesPaged(int page, int pageSize)
+        {
+            return _employeeRepository.GetEmployeesPaged(page, pageSize);
+        }
     }
 }

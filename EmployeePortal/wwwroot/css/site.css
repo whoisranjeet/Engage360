@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     overflow-y: scroll;
     margin: 0;
-    background: linear-gradient(to bottom, #e1e1e1, #b6b6b6, #8c8c8c, #6b6b6b);
+    background: #b6b6b6;
     margin-top: 56px;
 }
 
@@ -11,7 +11,7 @@ textarea.form-control {
 }
 
 .form-control, .new-emp-row input, .new-emp-row select, .employee-update-container select, .role-map-container select {
-    background-color: #e5e5e5e5 !important;
+    background-color: rgb(255 255 255 / 60%) !important;
     color: #212529 !important;
     border-radius: 8px !important;
     height: 38px !important;
@@ -106,6 +106,24 @@ a {
     }
 }
 
+#loading {
+    position: fixed;
+    display: none;
+    align-items: center;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 100vw;
+    justify-content: center;
+    gap: 15px;
+    font-size: 18px;
+    z-index: 9999;
+}
+
+    #loading.show {
+        display: flex;
+    }
+
 .login-container {
     display: flex;
     justify-content: center;
@@ -134,7 +152,7 @@ a {
 .loginout-box {
     padding: 24px;
     width: 400px;
-    background: white; 
+    background: white;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 12px;
     /* backdrop-filter: blur(10px); */
@@ -156,7 +174,7 @@ a {
 
 .terms {
     text-align: center;
-    font-size: 11px;    
+    font-size: 11px;
     margin-top: 14px;
 }
 
@@ -171,22 +189,22 @@ a {
     color: #717171;
 }
 
-    .or::before, .or::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        width: 30%;
-        height: 1px;
-        background-color: rgba(255, 255, 255, 0.1);
-    }
+.or::before, .or::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 30%;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
 
-    .or::before {
-        left: 0;
-    }
+.or::before {
+    left: 0;
+}
 
-    .or::after {
-        right: 0;
-    }
+.or::after {
+    right: 0;
+}
 
 .card {
     background: rgb(165 168 189 / 20%);
@@ -797,4 +815,3 @@ button.new-emp-btn {
     #SignInButton:hover {
         transform: translateY(-2px); /* Subtle lift */
     }
-

@@ -17,5 +17,6 @@ namespace EmployeePortal.Core.Interfaces
         Task<bool> RemoveEmployee(string EmailAddress);
         EmployeeDto GetEmployeeDetails(string EmailAddress);
         bool UpdateEmployeeDetails(EmployeeDto emp, string emailAddress);
+        IEnumerable<EmployeeDto> GetEmployeesPaged(int page, int pageSize);
     }
 }

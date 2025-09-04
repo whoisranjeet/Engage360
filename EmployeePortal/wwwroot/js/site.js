@@ -51,21 +51,22 @@ $(function () {
 
     $(".social-posts-container .post-delete-span").on('click', function () {
         let postId = $(this).closest(".card").attr("id");
-
         if (!postId) return;
 
-        if (!confirm("Are you sure you want to delete this post?")) return;
-
-        $.ajax({
-            url: '/Dashboard/DeletePost',
-            type: 'POST',
-            data: { id: postId },
-            success: function (response) {
-                $("#" + postId).remove();
-                showErrorPopup("Post deleted successfully!");
-            },
-            error: function () {
-                showErrorPopup("Something went wrong while deleting the post.");
+        confirmDelete().then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/Dashboard/DeletePost',
+                    type: 'POST',
+                    data: { id: postId },
+                    success: function (response) {
+                        $("#" + postId).remove();
+                        Swal.fire('Deleted!', 'Post deleted successfully!', 'success');
+                    },
+                    error: function () {
+                        Swal.fire('Error!', 'Something went wrong while deleting the post.', 'error');
+                    }
+                });
             }
         });
     });
@@ -199,67 +200,16 @@ $(function () {
         });
     }
 
-});
-
-
-
-
-
-
-let page = 1;
-let loading = false;
-let noMorePosts = false;
-
-async function loadPosts() {
-    if (loading || noMorePosts) return;
-    loading = true;
-    document.getElementById("loading").style.display = "block";
-
-    const response = await fetch(`/YourControllerName/GetPosts?page=${page}&pageSize=5`);
-    const posts = await response.json();
-
-    if (posts.length === 0) {
-        noMorePosts = true;
-        document.getElementById("no-more-posts").style.display = "block";
-    } else {
-        const container = document.getElementById("posts-container");
-
-        posts.forEach(post => {
-            const card = document.createElement("div");
-            card.classList.add("card");
-            card.innerHTML = `
-                    <div class="card-body">
-                        <h5 class="card-title">${post.title}</h5>
-                        <p class="card-text">${post.description}</p>
-                        ${post.imageData
-                    ? `<img src="data:image/jpeg;base64,${post.imageData}" alt="Post Image" class="img-fluid" />`
-                    : ""}
-                        <p class="card-text"><small class="text-muted">
-                            Published by ${post.author} on ${post.dateOfPublishing}
-                        </small></p>
-                        <div class="post-meta-icons">
-                            <span onclick="showComingSoonPopup()"><i class="fa fa-thumbs-up"></i> Like</span>
-                            <span onclick="showComingSoonPopup()"><i class="fa fa-comment"></i> Comment</span>
-                            <span onclick="showComingSoonPopup()"><i class="fa fa-share"></i> Share</span>
-                        </div>
-                    </div>
-                `;
-            container.appendChild(card);
+    function confirmDelete() {
+        return Swal.fire({
+            icon: 'warning',
+            title: 'Are you sure?',
+            text: "This action cannot be undone!",
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33'
         });
-
-        page++;
-    }
-
-    document.getElementById("loading").style.display = "none";
-    loading = false;
-}
-
-// Initial load
-loadPosts();
-
-// Infinite scroll
-window.addEventListener("scroll", () => {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) {
-        loadPosts();
     }
 });
