@@ -1,0 +1,38 @@
+﻿@model EmployeePortal.ViewModel.LayoutViewModel
+
+<div id="signup-container" class="loginout-box">
+    <div class="tab-toggle-container mb-2">
+        <div class="tab-toggle">
+            <a>Sign in</a>
+            <a class="active">Sign up</a>
+        </div>
+    </div>
+    <h5 class="mb-3 text-center">Create an account</h5>
+    <form method="post" id="signup-form" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <div class="d-flex mb-2 justify-content-between gap-2">
+            <div class="input-group">
+                <input asp-for="Employee.FirstName" type="text" placeholder="First name" required />
+            </div>
+            <div class="input-group">
+                <input asp-for="Employee.LastName" type="text" placeholder="Last name" required />
+            </div>
+        </div>
+        <div class="input-group mb-2">
+            <input asp-for="Employee.EmailAddress" type="email" placeholder="Enter your email" required />
+        </div>
+        <div class="input-group mb-2">
+            <input asp-for="Employee.MobileNumber" type="text" placeholder="888-666-0000" required />
+        </div>
+        <div class="input-group">
+            <button type="submit" class="login-btn">Create an account</button>
+        </div>
+        <div class="or loginoutlables">OR SIGN UP WITH</div>
+
+        @await Html.PartialAsync("_SocialSignInUp")
+
+        <div class="terms loginoutlables">
+            By creating an account, you agree to our <a href="#" onclick="showComingSoonPopup()" style="cursor:pointer;">Terms & Service</a>
+        </div>
+    </form>
+</div>

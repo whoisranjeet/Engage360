@@ -1,27 +1,29 @@
-﻿<div class="inner-container">
+﻿@model EmployeePortal.ViewModel.ContactUsViewModel
+
+<div class="inner-container">
     <div class="contact-container w-75">
         <h2>Contact Us</h2>
         <p>Have questions or feedback? We’d love to hear from you!</p>
         <form>
             @Html.AntiForgeryToken()
             <div class="form-group">
-                <input type="text" class="form-control" id="name" placeholder="Your Name">
+                <input asp-for="Name" type="text" class="form-control" id="name" placeholder="Your Name">
             </div>
             <div class="form-group">
-                <input type="email" class="form-control" id="email" placeholder="Your Email">
+                <input asp-for="Name" type ="email" class="form-control" id="email" placeholder="Your Email">
             </div>
             <div class="form-group">
-                <input type="tel" class="form-control" id="phone" placeholder="Your Phone">
+                <input asp-for=Phone type ="tel" class="form-control" id="phone" placeholder="Your Phone">
             </div>
             <div class="form-group">
-                <textarea id="message" class="form-control" placeholder="Your Message"></textarea>
+                <textarea asp-for=Message id="message" class="form-control" placeholder="Your Message"></textarea>
             </div>
             <button type="submit" class="btn" onclick="showComingSoonPopup()">Send Message</button>
         </form>
 
         <div class="social-icons mt-4">
             <a href="https://www.facebook.com/whoisranjeet99/" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-            <a onclick="showComingSoonPopup()" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+            <a href="https://x.com/whoisranjeet99" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
             <a href="https://www.linkedin.com/in/whoisranjeet99/" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
             <a href="https://www.instagram.com/whoisranjeet99/" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
         </div>
