@@ -52,5 +52,20 @@ namespace EmployeePortal.Services.Services
                 return false;
             }
         }
+
+        public IEnumerable<PostDto> GetPostsPaged(int page, int pageSize)
+        {
+            var posts = _dashboardRepository.GetPostsPaged(page, pageSize);
+            
+            return posts.Select(p => new PostDto
+            {
+                Id = p.Id,
+                Title = p.Title,
+                Description = p.Description,
+                ImageData = p.ImageData,
+                Author = p.Author,
+                DateOfPublishing = p.DateOfPublishing
+            });
+        }
     }
 }

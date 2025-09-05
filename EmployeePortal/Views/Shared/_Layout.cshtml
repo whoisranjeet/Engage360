@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]Engage360</title>
+    <link href="https://fonts.googleapis.com/css2?family=Neuton" rel="stylesheet">
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/site.css" rel="stylesheet" />
     <link rel="icon" type="image/png" href="~/favicon.png" />
@@ -11,55 +12,12 @@
     <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.3/jquery.validate.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate.unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="main-layout-body">
     <!-- Navigation Bar -->
     <header class="fixed-top">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" href="/">Engage 360</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/My-Organization">My Organization</a>
-                        </li>
-
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" id="manageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Manage</a>
-                                <ul class="dropdown-menu" aria-labelledby="manageDropdown">
-                                    <li><a class="dropdown-item" href="/New-Employee">Add New Employee</a></li>
-                                    <li><a class="dropdown-item" href="/Update-Employee">Update Employee Details</a></li>
-                                    <li><a class="dropdown-item" href="/Delete-Employee">Remove Employee</a></li>
-                                    <li><a class="dropdown-item" href="/Modify-Role">Map Employee Role</a></li>
-                                </ul>
-                            </li>
-                        }
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Payroll">Payroll</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Contact-Us">Contact Us</a>
-                        </li>
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" href="/Employee/SignOut">Sign Out - @User.Identity.Name</a>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        @await Html.PartialAsync("_NavBar")
     </header>
 
     <!-- Main Content -->
@@ -77,21 +35,12 @@
     </div>
 
     <!-- Footer -->
-    <footer class="footer bg-dark text-white py-3 mt-auto">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <p class="mb-0">&copy; @DateTime.Now.Year Engage360. All rights reserved.</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <ul class="list-inline mb-0">
-                        <li class="list-inline-item"><a class="text-white" href="#">Privacy Policy</a></li>
-                        <li class="list-inline-item"><a class="text-white" href="#">Terms of Service</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </footer>
+    @await Html.PartialAsync("_Footer")
+
+    <div class="login-container" style="display:none;">
+        @await Html.PartialAsync("_SignIn")
+        @await Html.PartialAsync("_SignUp")        
+    </div>
 
     <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

@@ -67,11 +67,11 @@ app.MapGet("/GoogleSignInUp", async context =>
 app.MapControllerRoute(
     name: "rootSignIn",
     pattern: "/",
-    defaults: new { controller = "Employee", action = "SignIn" });
+    defaults: new { controller = "Dashboard", action = "Dashboard" });
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Employee}/{action=SignIn}/{id?}");
+    pattern: "{controller=Dashboard}/{action=Dashboard}/{id?}");
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;

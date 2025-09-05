@@ -1,4 +1,5 @@
-﻿using EmployeePortal.Core.Models;
+﻿using EmployeePortal.Core.DTOs;
+using EmployeePortal.Core.Models;
 
 namespace EmployeePortal.Core.Interfaces
 {
@@ -10,11 +11,12 @@ namespace EmployeePortal.Core.Interfaces
         Guid GetDefaultRoleId(string defaultRoleName);
         List<Employee> GetAllEmployees();
         List<Role> GetAllRoles();
-        List<User> GetAllUsers();
+        Task<List<User>> GetAllUsers();
         Task<User> GetUserByEmailAsync(string email);
         bool ModifyEmployeeRole(string EmailAddress, string RoleName);
         Task<bool> RemoveEmployee(string EmailAddress);
         Employee GetEmployeeDetails(string EmailAddress);
         bool UpdateEmployeeDetails(Employee emp, string emailAddress);
+        IEnumerable<Employee> GetEmployeesPaged(int page, int pageSize);
     }
 }

@@ -1,83 +1,38 @@
-﻿@using EmployeePortal.ViewModel;
-@model DashboardViewModel
-@{
-    var SuccessMessage = TempData["SuccessMessage"] as string;
-    var PostSuccess = TempData["PostSuccess"] as string;
-
-    if (!string.IsNullOrEmpty(SuccessMessage))
-    {
-        <script type="text/javascript">
-            alert('@SuccessMessage');
-        </script>
-    }
-
-    if (!string.IsNullOrEmpty(PostSuccess))
-    {
-        <script type="text/javascript">
-            alert('@PostSuccess');
-        </script>
-    }
+﻿@if (User.Identity.IsAuthenticated)
+{
+    @await Html.PartialAsync("CreatePost")
 }
 
-<div class="card w-100">
-    <div class="card-body">
-        <h5 class="card-title">What's on your mind?</h5>
-        <form id="createPostForm" enctype="multipart/form-data">
-            @Html.AntiForgeryToken()
-            <div class="form-group" style="margin-bottom:10px;">
-                <input asp-for="CreatePost.Title" type="text" class="form-control" placeholder="Title..." required>
-            </div>
-            <div class="form-group">
-                <textarea asp-for="CreatePost.Description" class="form-control" rows="8" placeholder="Share your thoughts..." required></textarea>
-            </div>
-            <div class="form-group" style="margin-top:10px;">
-                <input asp-for="ImageUpload" style="padding:7px;" type="file" class="form-control" accept="image/*">
-            </div>
-            <div class="d-flex justify-content-between align-items-center mt-2">
-                <button type="submit" class="btn btn-primary">Post</button>
-                <div>
-                    <span onclick="showComingSoonPopup()" style="cursor: pointer;"><i class="fa fa-camera hover-blue"></i> Add Video</span>
-                    <span onclick="showComingSoonPopup()" style="cursor: pointer;"><i class="fa fa-map-marker hover-blue"></i> Add Location</span>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
 <div class="social-container">
-    <div class="social-posts-container">
-        @foreach (var post in Model.Posts)
-        {
-            <div id="@post.Id" class="card">
-                <div class="card-body">
-                    <h5 class="card-title">@post.Title</h5>
-                    <p class="card-text">@post.Description</p>
-
-                    @if (post.ImageData != null && post.ImageData.Length > 0)
-                    {
-                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(post.ImageData)" alt="Post Image" class="img-fluid" />
-                    }
-
-                    <p class="card-text"><small class="text-muted">Published by @post.Author on @post.DateOfPublishing</small></p>
-
-                    <div class="post-meta-icons">
-                        <span onclick="showComingSoonPopup()"><i class="fa fa-thumbs-up"></i> Like</span>
-                        <span onclick="showComingSoonPopup()"><i class="fa fa-comment"></i> Comment</span>
-                        <span onclick="showComingSoonPopup()"><i class="fa fa-share"></i> Share</span>
-                        @if (User.IsInRole("Social Admin") || post.Author == User.Identity.Name)
-                        {
-                            <span class="post-delete-span"><i class="fa fa-trash-can"></i> Delete</span>
-                        }
-                    </div>
-                </div>
-            </div>
-        }
+    <div id="postsContainer" class="social-posts-container">
+        <!-- Posts will load here dynamically -->
     </div>
-
-    <div class="social-media-posts-container">
-        <iframe class="social-media-post-card" src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FWiproLimited%2Fposts%2Fpfbid02jFh9xFJb6s7ZzBLChmbgvmxhTyoX5ogPf5eru3xYbw8ht6d3JGfX92R3YvZ7huUFl"></iframe>
-        <iframe class="social-media-post-card" src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2FTataConsultancyServices%2Fvideos%2F398692516645534%2F"></iframe>
-        <iframe class="social-media-post-card" src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FWiproLimited%2Fposts%2Fpfbid02bPjxBLvczrFHsTUKJoN4j7GoEMbqkwsW3DV9kkGZiafWuQaSWJrF7yJaRWYW36ozl"></iframe>
-        <iframe class="social-media-post-card" src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FTataMotorsGroup%2Fposts%2Fpfbid037gPPTj7hVySfyuGhCritWoinQvcRArgiuap9Hv8zxZbgxfv7P6QwqmsPLGzuXHpgl"></iframe>
-    </div>
+    @await Html.PartialAsync("_SocialLinks")
 </div>
+
+<div id="loading">
+    <span class="spinner-border text-primary"></span> Loading...
+</div>
+
+<div id="endMessage" class="text-center mb-3 mt-4 text-black-50" style="display:none;">
+    That's the end, until someone shares something new.
+</div>
+
+@section Scripts {
+    <script>        
+        let currentUser = null;
+        let isAdmin = false;
+        let isAuthenticated = false;
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <text>
+                currentUser = "@User.Identity.Name";
+                isAdmin = @User.IsInRole("Social Admin").ToString().ToLower();
+                isAuthenticated = true;
+            </text>
+        }
+    </script>
+
+    <script src="~/js/fetchallposts.js"></script>
+}

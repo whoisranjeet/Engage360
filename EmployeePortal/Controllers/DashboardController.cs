@@ -1,10 +1,8 @@
-﻿using EmployeePortal.Core.DTOs;
-using EmployeePortal.Core.Interfaces;
+﻿using EmployeePortal.Core.Interfaces;
 using EmployeePortal.Data.Data;
 using EmployeePortal.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace EmployeePortal.Controllers
@@ -15,62 +13,54 @@ namespace EmployeePortal.Controllers
         private readonly IDashboardService _dashboardService;
         private readonly ApplicationDbContext _context;
 
-        public DashboardController(IDashboardService dashboardService, ApplicationDbContext context)
+        public DashboardController(IDashboardService dashboardService, ApplicationDbContext context, IEmployeeService employeeService)
         {
             _dashboardService = dashboardService;
             _context = context;
         }
 
         [HttpGet]
-        [Route("Dashboard")]
-        public async Task<IActionResult> Dashboard()
+        [AllowAnonymous]
+        public IActionResult Dashboard()
         {
-            var posts = await _context.Posts
-                .Select(post => new PostDto
-                {
-                    Id = post.Id,
-                    Title = post.Title,
-                    Description = post.Description,
-                    Author = post.Author,
-                    DateOfPublishing = post.DateOfPublishing,
-                    ImageData = post.ImageData
-                })
-                .ToListAsync();
+            return View();
+        }
 
-            var viewModel = new DashboardViewModel
-            {
-                Posts = posts
-            };
-
-            return View(viewModel);
+        [HttpGet]
+        [Route("api/posts")]
+        [AllowAnonymous]
+        public IActionResult GetPosts(int page = 1, int pageSize = 10)
+        {
+            var employees = _dashboardService.GetPostsPaged(page, pageSize);
+            return Json(employees);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreatePost(DashboardViewModel viewModel)
+        public async Task<IActionResult> CreatePost(LayoutViewModel viewModel)
         {
-            if (viewModel.ImageUpload != null && viewModel.ImageUpload.Length > 0)
+            if (viewModel.Image != null && viewModel.Image.Length > 0)
             {
                 using var memoryStream = new MemoryStream();
-                await viewModel.ImageUpload.CopyToAsync(memoryStream);
-                viewModel.CreatePost.ImageData = memoryStream.ToArray();
+                await viewModel.Image.CopyToAsync(memoryStream);
+                viewModel.Post.ImageData = memoryStream.ToArray();
             }
 
-            viewModel.CreatePost.Author = User.FindFirst(ClaimTypes.Name)?.Value;
-            viewModel.CreatePost.DateOfPublishing = DateTime.Now;
+            viewModel.Post.Author = User.FindFirst(ClaimTypes.Name)?.Value;
+            viewModel.Post.DateOfPublishing = DateTime.Now;
 
-            if (_dashboardService.CreatePost(viewModel.CreatePost))
+            if (_dashboardService.CreatePost(viewModel.Post))
             {
                 return Json(new
                 {
                     success = true,
-                    id = viewModel.CreatePost.Id,
-                    title = viewModel.CreatePost.Title,
-                    description = viewModel.CreatePost.Description,
-                    author = viewModel.CreatePost.Author,
-                    date = viewModel.CreatePost.DateOfPublishing.ToString("g"),
-                    image = viewModel.CreatePost.ImageData != null
-                        ? $"data:image/jpeg;base64,{Convert.ToBase64String(viewModel.CreatePost.ImageData)}"
+                    id = viewModel.Post.Id,
+                    title = viewModel.Post.Title,
+                    description = viewModel.Post.Description,
+                    author = viewModel.Post.Author,
+                    date = viewModel.Post.DateOfPublishing.ToString("g"),
+                    image = viewModel.Post.ImageData != null
+                        ? $"data:image/jpeg;base64,{Convert.ToBase64String(viewModel.Post.ImageData)}"
                         : null
                 });
             }
@@ -91,10 +81,21 @@ namespace EmployeePortal.Controllers
             return BadRequest(new { success = false, message = "Could not delete post." });
         }
 
-        [Route("Contact-Us")]
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("Contact")]        
         public IActionResult ContactUs()
         {
             return View();
         }
+
+        //[HttpPost]
+        //[AllowAnonymous]
+        //[Route("Contact")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> ContactUs(ContactUsViewModel viewModel)
+        //{
+        //    return View();
+        //}
     }
 }

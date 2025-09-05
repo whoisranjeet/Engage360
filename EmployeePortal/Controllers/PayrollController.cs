@@ -2,6 +2,7 @@
 using DinkToPdf.Contracts;
 using EmployeePortal.Core.Interfaces;
 using EmployeePortal.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
@@ -10,6 +11,7 @@ using System.Security.Claims;
 
 namespace EmployeePortal.Controllers
 {
+    [Authorize]
     public class PayrollController : Controller
     {
         private readonly IEmployeeService _employeeService;

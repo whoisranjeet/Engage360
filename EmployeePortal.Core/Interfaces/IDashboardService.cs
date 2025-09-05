@@ -6,5 +6,6 @@ namespace EmployeePortal.Core.Interfaces
     {
         bool CreatePost(PostDto postDto);
         bool DeletePost(Guid id);
+        IEnumerable<PostDto> GetPostsPaged(int page, int pageSize);
     }
 }

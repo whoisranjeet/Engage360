@@ -1,7 +1,6 @@
 ﻿using EmployeePortal.Core.DTOs;
 using EmployeePortal.Core.Interfaces;
 using EmployeePortal.Core.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace EmployeePortal.Services.Services
 {
@@ -116,9 +115,9 @@ namespace EmployeePortal.Services.Services
             return rolesDtos;
         }
 
-        public List<UserDto> GetAllUsers()
+        public async Task<List<UserDto>> GetAllUsers()
         {
-            var users = _employeeRepository.GetAllUsers();
+            var users = await _employeeRepository.GetAllUsers();
 
             var usersDtos = users.Select(user => new UserDto
             {
@@ -129,9 +128,15 @@ namespace EmployeePortal.Services.Services
             return usersDtos;
         }
 
-        public async Task<User> GetUserByEmailAsync(string email)
+        public async Task<UserDto> GetUserByEmailAsync(string email)
         {
-            return await _employeeRepository.GetUserByEmailAsync(email);
+            var user = await _employeeRepository.GetUserByEmailAsync(email);
+            var userDto = new UserDto
+            {
+                Username = user.Username,
+                RoleId = user.RoleId
+            };
+            return userDto;
         }
 
         public bool ModifyEmployeeRole(string EmailAddress, string RoleName)
@@ -191,6 +196,23 @@ namespace EmployeePortal.Services.Services
             }
 
             return false;
+        }
+
+        public IEnumerable<EmployeeDto> GetEmployeesPaged(int page, int pageSize)
+        {
+            var emp = _employeeRepository.GetEmployeesPaged(page, pageSize);
+
+            return emp.Select(e => new EmployeeDto
+            {
+                FirstName = e.FirstName,
+                LastName = e.LastName,
+                ProfilePicture = e.ProfilePicture,
+                EmailAddress = e.EmailAddress,
+                Gender = e.Gender,
+                MobileNumber = e.MobileNumber,
+                Department = e.Department,
+                Address = e.Address,
+            });
         }
     }
 }
