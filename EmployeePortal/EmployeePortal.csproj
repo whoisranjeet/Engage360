@@ -26,6 +26,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\EmployeePortal.Api\EmployeePortal.Api.csproj" />
 		<ProjectReference Include="..\EmployeePortal.Data\EmployeePortal.Data.csproj" />
 		<ProjectReference Include="..\EmployeePortal.Services\EmployeePortal.Services.csproj" />
 		<PackageReference Include="System.Text.Encoding.Extensions" Version="4.3.0" />  		
