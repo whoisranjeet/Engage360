@@ -160,13 +160,13 @@ namespace EmployeePortal.Data.Repositories
             }
         }
 
-        public IEnumerable<EmployeeDto> GetEmployeesPaged(int page, int pageSize)
+        public IEnumerable<Employee> GetEmployeesPaged(int page, int pageSize)
         {
             return _context.Employees
                .OrderBy(e => e.FirstName)
                .Skip((page - 1) * pageSize)
                .Take(pageSize)
-               .Select(e => new EmployeeDto
+               .Select(e => new Employee
                {
                    FirstName = e.FirstName,
                    LastName = e.LastName,

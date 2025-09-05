@@ -6,5 +6,6 @@ namespace EmployeePortal.Core.Interfaces
     {
         bool CreatePost(Post post);
         bool DeletePost(Guid id);
+
     }
 }
