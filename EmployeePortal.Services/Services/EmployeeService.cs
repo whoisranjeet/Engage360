@@ -115,9 +115,9 @@ namespace EmployeePortal.Services.Services
             return rolesDtos;
         }
 
-        public List<UserDto> GetAllUsers()
+        public async Task<List<UserDto>> GetAllUsers()
         {
-            var users = _employeeRepository.GetAllUsers();
+            var users = await _employeeRepository.GetAllUsers();
 
             var usersDtos = users.Select(user => new UserDto
             {
@@ -128,9 +128,15 @@ namespace EmployeePortal.Services.Services
             return usersDtos;
         }
 
-        public async Task<User> GetUserByEmailAsync(string email)
+        public async Task<UserDto> GetUserByEmailAsync(string email)
         {
-            return await _employeeRepository.GetUserByEmailAsync(email);
+            var user = await _employeeRepository.GetUserByEmailAsync(email);
+            var userDto = new UserDto
+            {
+                Username = user.Username,
+                RoleId = user.RoleId
+            };
+            return userDto;
         }
 
         public bool ModifyEmployeeRole(string EmailAddress, string RoleName)

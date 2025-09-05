@@ -11,8 +11,8 @@ namespace EmployeePortal.Core.Interfaces
         Guid GetDefaultRoleId(string defaultRoleName);
         List<EmployeeDto> GetAllEmployees();
         List<RoleDto> GetAllRoles();
-        List<UserDto> GetAllUsers();
-        Task<User> GetUserByEmailAsync(string email);
+        Task<List<UserDto>> GetAllUsers();
+        Task<UserDto> GetUserByEmailAsync(string email);
         bool ModifyEmployeeRole(string EmailAddress, string RoleName);
         Task<bool> RemoveEmployee(string EmailAddress);
         EmployeeDto GetEmployeeDetails(string EmailAddress);

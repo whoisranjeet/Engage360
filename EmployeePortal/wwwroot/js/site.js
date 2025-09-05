@@ -8,7 +8,7 @@
             showSignInSuccess();
         } 
 
-        // Clear query string after handling
+        // Clear query string after signing in using google
         const newUrl = window.location.origin + window.location.pathname;
         window.history.replaceState({}, document.title, newUrl);
     }
@@ -142,6 +142,7 @@ $(function () {
         }
     });
 
+    //sign in using user form - ajax call
     $("#signin-form").on("submit", function (e) {
         e.preventDefault();
 
@@ -166,6 +167,18 @@ $(function () {
         });
     });
 
+    function showErrorPopup(message) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Sign in failed',
+            text: message,
+            confirmButtonText: 'Try Again',
+            confirmButtonColor: '#d33'
+        });
+    }
+
+    //sign up using user form - ajax call
+
     $("#signup-form").on("submit", function (e) {
         e.preventDefault();
 
@@ -181,19 +194,19 @@ $(function () {
                         window.location.href = response.redirectUrl;
                     }, 1600); // 1600ms = 1.6 seconds
                 } else {
-                    showErrorPopup(response.message || "Invalid details");
+                    signUpErrorPopup(response.message);
                 }
             },
             error: function () {
-                showErrorPopup("Something went wrong. Please try again.");
+                signUpErrorPopup("Something went wrong. Please try again.");
             }
         });
     });
 
-    function showErrorPopup(message) {
+    function signUpErrorPopup(message) {
         Swal.fire({
             icon: 'error',
-            title: 'Login Failed',
+            title: 'Account already exists',
             text: message,
             confirmButtonText: 'Try Again',
             confirmButtonColor: '#d33'

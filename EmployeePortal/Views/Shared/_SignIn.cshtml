@@ -1,6 +1,4 @@
-﻿@model EmployeePortal.ViewModel.LayoutViewModel
-
-<div id="signin-container" class="loginout-box">
+﻿<div id="signin-container" class="loginout-box">
     <div class="tab-toggle-container mb-2">
         <div class="tab-toggle">
             <a class="active">Sign in</a>
@@ -11,15 +9,15 @@
     <form method="post" id="signin-form">
         @Html.AntiForgeryToken()
         <div class="input-group mb-2">
-            <input asp-for="User.Username" id="username" type="text" placeholder="Enter your email" required />
+            <input name="username" type="text" placeholder="Enter your email" required />
         </div>
         <div class="input-group mb-2">
-            <input asp-for="User.Password" id="password" type="password" placeholder="Enter your password" required />
+            <input name="password" type="password" placeholder="Enter your password" required />
         </div>
         <div class="d-flex justify-content-between gap-1 mb-2">
             <div class="d-flex gap-1">
-                <input type="checkbox" id="RememberMe" name="RememberMe">
-                <label for="RememberMe" class="loginoutlables m-0 remember-me fs-11px fw-normal">Remember Me</label>
+                <input type="checkbox" name="rememberMe">
+                <label class="loginoutlables m-0 remember-me fs-11px fw-normal">Remember Me</label>
             </div>
             <a onclick="showComingSoonPopup()" class="loginoutlables fs-11px m-0">Forgot Password?</a>
         </div>

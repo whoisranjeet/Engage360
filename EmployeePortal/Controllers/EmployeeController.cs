@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using System.Net.Mail;
 using System.Security.Claims;
 
 namespace EmployeePortal.Controllers
@@ -29,13 +31,26 @@ namespace EmployeePortal.Controllers
         [AllowAnonymous]
         [Route("SignInUsingUsernamePassword")]
         [ValidateAntiForgeryToken]
-        public IActionResult SignIn(LayoutViewModel model)
+        public IActionResult SignIn()
         {
-            if (ModelState.IsValid && _employeeService.UserSignIn(model.User))
+            var username = Request.Form["Username"].ToString();
+            var password = Request.Form["Password"].ToString();
+            var rememberMe = Request.Form["RememberMe"].ToString() == "on";
+
+            if(!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
             {
-                LogInAsync(model.User);
-                return Json(new { success = true, redirectUrl = Url.Action("Dashboard", "Dashboard") });
-            }
+                var dto = new UserDto()
+                {
+                    Username = username,
+                    Password = password
+                };
+
+                if (_employeeService.UserSignIn(dto))
+                {
+                    LogInAsync(dto);
+                    return Json(new { success = true, redirectUrl = Url.Action("Dashboard", "Dashboard") });
+                }
+            }            
 
             return Json(new { success = false, message = "Invalid username or password." });
         }
@@ -44,22 +59,44 @@ namespace EmployeePortal.Controllers
         [AllowAnonymous]
         [Route("SignUpUsingForm")]
         [ValidateAntiForgeryToken]
-        public IActionResult SignUp(LayoutViewModel model)
+        public async Task<IActionResult> SignUp()
         {
-            if (ModelState.IsValid)
-            {
-                var generatedPassword = GeneratePassword(model.Employee.LastName);
-                model.Employee.Password = generatedPassword;
+            var firstName = Request.Form["firstName"].ToString();
+            var lastName = Request.Form["lastName"].ToString();
+            var emailAddress = Request.Form["emailAddress"].ToString();
+            var mobileNumber = Request.Form["mobileNumber"].ToString();
 
-                if (_employeeService.UserSignUp(model.Employee))
+            if(!string.IsNullOrEmpty(emailAddress))
+            {
+                var result = await _employeeService.GetUserByEmailAsync(emailAddress);
+                if(result != null)
                 {
-                    string emailBody = string.Format("Your account has been set up in our system.\nLogin Details:\nUsername: {0}\nPassword: {1}", model.Employee.EmailAddress, generatedPassword);
-                    _emailService.SendEmailUsingGmail(model.Employee.EmailAddress, "Your account has been setup. : Engage360", emailBody);
+                    return Json(new { success = false, message = "No need to sign up twice, we've got you covered! Just sign in." });
+                }                
+            }
+
+            if (!string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(lastName) && !string.IsNullOrEmpty(emailAddress))
+            {
+                var generatedPassword = GeneratePassword(lastName);
+
+                var empDto = new EmployeeDto()
+                {
+                    FirstName = firstName,
+                    LastName = lastName,
+                    EmailAddress = emailAddress,
+                    MobileNumber = mobileNumber,                    
+                    Password = generatedPassword
+                };
+
+                if (_employeeService.UserSignUp(empDto))
+                {
+                    string emailBody = string.Format("Your account has been set up in our system.\nLogin Details:\nUsername: {0}\nPassword: {1}", empDto.EmailAddress, generatedPassword);
+                    _emailService.SendEmailUsingGmail(empDto.EmailAddress, "Your account has been setup. : Engage360", emailBody);
 
                     UserDto userDto = new()
                     {
-                        Username = model.Employee.EmailAddress,
-                        Password = model.Employee.Password
+                        Username = empDto.EmailAddress,
+                        Password = empDto.Password
                     };
                     if (_employeeService.UserSignIn(userDto))
                     {
@@ -145,13 +182,13 @@ namespace EmployeePortal.Controllers
 
         [HttpGet]
         [Route("Modify-Role")]
-        public IActionResult ModifyEmployeeRole()
+        public async Task<IActionResult> ModifyEmployeeRole()
         {
             var model = new RoleMappingDto
             {
                 Roles = _employeeService.GetAllRoles(),
                 Employees = _employeeService.GetAllEmployees(),
-                Users = _employeeService.GetAllUsers(),
+                Users = await _employeeService.GetAllUsers(),
                 EmailAddress = string.Empty,
                 RoleName = string.Empty
             };
@@ -250,10 +287,12 @@ namespace EmployeePortal.Controllers
 
         [HttpGet]
         [Route("HandleGoogleSignInUpAsync")]
-        public IActionResult HandleGoogleSignInUpAsync()
+        public async Task<IActionResult> HandleGoogleSignInUpAsync()
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
-            var user = _employeeService.GetAllUsers().FirstOrDefault(user => user.Username == email);
+            //var users = await _employeeService.GetAllUsers();
+            //var user = users.FirstOrDefault(u => u.Username == email);
+            var user = await _employeeService.GetUserByEmailAsync(email);
 
             if (user != null)
             {
@@ -296,7 +335,8 @@ namespace EmployeePortal.Controllers
 
         public async void LogInAsync(UserDto userDto)
         {
-            var user = _employeeService.GetAllUsers().FirstOrDefault(user => user.Username == userDto.Username);
+            var users = await _employeeService.GetAllUsers();
+            var user = users.FirstOrDefault(u => u.Username == userDto.Username);
             var role = user != null ? _employeeService.GetAllRoles().FirstOrDefault(role => role.Id == user.RoleId) : null;
 
             var claims = new List<Claim>

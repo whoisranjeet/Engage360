@@ -63,9 +63,9 @@ namespace EmployeePortal.Data.Repositories
             return _context.Roles.ToList();
         }
 
-        public List<User> GetAllUsers()
+        public async Task<List<User>> GetAllUsers()
         {
-            return _context.Users.ToList();
+            return await _context.Users.ToListAsync();
         }
 
         public async Task<User> GetUserByEmailAsync(string email)
