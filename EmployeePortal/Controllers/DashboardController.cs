@@ -1,10 +1,8 @@
-﻿using EmployeePortal.Core.DTOs;
-using EmployeePortal.Core.Interfaces;
+﻿using EmployeePortal.Core.Interfaces;
 using EmployeePortal.Data.Data;
 using EmployeePortal.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace EmployeePortal.Controllers
@@ -23,26 +21,18 @@ namespace EmployeePortal.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Dashboard()
+        public IActionResult Dashboard()
         {
-            var posts = await _context.Posts
-                .Select(post => new PostDto
-                {
-                    Id = post.Id,
-                    Title = post.Title,
-                    Description = post.Description,
-                    Author = post.Author,
-                    DateOfPublishing = post.DateOfPublishing,
-                    ImageData = post.ImageData
-                })
-                .ToListAsync();
+            return View();
+        }
 
-            var viewModel = new LayoutViewModel
-            {
-                Posts = posts
-            };
-
-            return View(viewModel);
+        [HttpGet]
+        [Route("api/posts")]
+        [AllowAnonymous]
+        public IActionResult GetPosts(int page = 1, int pageSize = 10)
+        {
+            var employees = _dashboardService.GetPostsPaged(page, pageSize);
+            return Json(employees);
         }
 
         [HttpPost]
@@ -93,7 +83,7 @@ namespace EmployeePortal.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        [Route("Contact-Us")]        
+        [Route("Contact")]        
         public IActionResult ContactUs()
         {
             return View();
@@ -101,7 +91,7 @@ namespace EmployeePortal.Controllers
 
         //[HttpPost]
         //[AllowAnonymous]
-        //[Route("Contact-Us")]
+        //[Route("Contact")]
         //[ValidateAntiForgeryToken]
         //public async Task<IActionResult> ContactUs(ContactUsViewModel viewModel)
         //{

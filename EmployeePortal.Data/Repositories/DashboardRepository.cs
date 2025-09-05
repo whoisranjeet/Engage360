@@ -45,5 +45,23 @@ namespace EmployeePortal.Data.Repositories
                 return false;
             }
         }
+
+        public IEnumerable<Post> GetPostsPaged(int page, int pageSize)
+        {
+
+            return _context.Posts
+                .OrderBy(p => p.DateOfPublishing)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(p => new Post
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Description = p.Description,
+                    Author = p.Author,
+                    DateOfPublishing = p.DateOfPublishing,
+                    ImageData = p.ImageData,
+                }).ToList();
+        }
     }
 }

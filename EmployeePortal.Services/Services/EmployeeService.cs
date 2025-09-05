@@ -1,10 +1,6 @@
 ﻿using EmployeePortal.Core.DTOs;
 using EmployeePortal.Core.Interfaces;
 using EmployeePortal.Core.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
-using System.Net.Mail;
-using System.Reflection;
 
 namespace EmployeePortal.Services.Services
 {

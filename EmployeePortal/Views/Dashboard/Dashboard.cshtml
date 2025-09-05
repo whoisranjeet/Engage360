@@ -4,35 +4,35 @@
 }
 
 <div class="social-container">
-    <div class="social-posts-container">
-        @foreach (var post in Model.Posts)
-        {
-            <div id="@post.Id" class="card">
-                <div class="card-body">
-                    <h5 class="card-title">@post.Title</h5>
-                    <p class="card-text">@post.Description</p>
-
-                    @if (post.ImageData != null && post.ImageData.Length > 0)
-                    {
-                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(post.ImageData)" alt="Post Image" class="img-fluid" />
-                    }
-
-                    <p class="card-text"><small class="text-muted">Published by @post.Author on @post.DateOfPublishing</small></p>
-
-                    <div class="post-meta-icons">
-                        <span onclick="showComingSoonPopup()"><i class="fa fa-thumbs-up"></i> Like</span>
-                        <span onclick="showComingSoonPopup()"><i class="fa fa-comment"></i> Comment</span>
-                        <span onclick="showComingSoonPopup()"><i class="fa fa-share"></i> Share</span>
-                        @if (User.IsInRole("Social Admin") || post.Author == User.Identity.Name)
-                        {
-                            <span class="post-delete-span"><i class="fa fa-trash-can"></i> Delete</span>
-                        }
-                    </div>
-                </div>
-            </div>
-        }
+    <div id="postsContainer" class="social-posts-container">
+        <!-- Posts will load here dynamically -->
     </div>
-
     @await Html.PartialAsync("_SocialLinks")
-
 </div>
+
+<div id="loading">
+    <span class="spinner-border text-primary"></span> Loading...
+</div>
+
+<div id="endMessage" class="text-center mb-3 mt-4 text-black-50" style="display:none;">
+    That's the end, until someone shares something new.
+</div>
+
+@section Scripts {
+    <script>        
+        let currentUser = null;
+        let isAdmin = false;
+        let isAuthenticated = false;
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <text>
+                currentUser = "@User.Identity.Name";
+                isAdmin = @User.IsInRole("Social Admin").ToString().ToLower();
+                isAuthenticated = true;
+            </text>
+        }
+    </script>
+
+    <script src="~/js/fetchallposts.js"></script>
+}
