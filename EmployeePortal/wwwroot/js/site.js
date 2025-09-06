@@ -44,21 +44,37 @@ function toSentenceCase(text) {
 }
 
 $(function () {
+
+    // Show or hide go-to-top button on scroll
+    $(window).on("scroll", function () {
+        if ($(this).scrollTop() > 200) {
+            $("#backToTop").fadeIn();
+        } else {
+            $("#backToTop").fadeOut();
+        }
+    });
+
+    // Smooth scroll to top on click
+    $("#backToTop").on("click", function () {
+        $("html, body").animate({ scrollTop: 0 }, 600); // 600ms animation
+        return false;
+    });
+
     $(".social-posts-container p.card-text").each(function () {
         let currentText = $(this).text();
         $(this).text(toSentenceCase(currentText));
     });
 
-    $(".social-posts-container .post-delete-span").on('click', function () {
+    // Delegate the event to the parent container
+    $("#postsContainer").on("click", ".post-delete-span", function () {
         let postId = $(this).closest(".card").attr("id");
         if (!postId) return;
 
         confirmDelete().then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: '/Dashboard/DeletePost',
+                    url: `/api/deletepost?id=${postId}`,
                     type: 'POST',
-                    data: { id: postId },
                     success: function (response) {
                         $("#" + postId).remove();
                         Swal.fire('Deleted!', 'Post deleted successfully!', 'success');
@@ -74,18 +90,12 @@ $(function () {
     $("#createPostForm").on("submit", function (e) {
         e.preventDefault();
 
-        let formData = new FormData(this);
-        let token = $('input[name="__RequestVerificationToken"]').val();
+        let form = $(this);
 
         $.ajax({
             url: '/Dashboard/CreatePost',
             type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            headers: {
-                "RequestVerificationToken": token
-            },
+            data: form.serialize(),
             success: function (response) {
                 console.log("Response:", response);
                 if (response.success) {

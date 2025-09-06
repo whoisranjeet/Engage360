@@ -28,7 +28,7 @@
         {
             <text>
                 currentUser = "@User.Identity.Name";
-                isAdmin = @User.IsInRole("Social Admin").ToString().ToLower();
+                isAdmin = @User.IsInRole("Admin").ToString().ToLower();
                 isAuthenticated = true;
             </text>
         }

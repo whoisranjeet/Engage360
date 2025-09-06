@@ -4,8 +4,8 @@ namespace EmployeePortal.Core.Interfaces
 {
     public interface IDashboardRepository
     {
-        bool CreatePost(Post post);
-        bool DeletePost(Guid id);
-        IEnumerable<Post> GetPostsPaged(int page, int pageSize);
+        Task<bool> CreatePostAsync(Post post);
+        Task<bool> DeletePostAsync(Guid id);
+        Task<IEnumerable<Post>> GetPostsPagedAsync(int page, int pageSize);
     }
 }

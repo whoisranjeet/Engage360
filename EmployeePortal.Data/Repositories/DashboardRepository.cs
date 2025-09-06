@@ -1,6 +1,7 @@
 ﻿using EmployeePortal.Core.Interfaces;
 using EmployeePortal.Core.Models;
 using EmployeePortal.Data.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace EmployeePortal.Data.Repositories
@@ -15,12 +16,12 @@ namespace EmployeePortal.Data.Repositories
             _context = context;
             _logger = logger;
         }
-        public bool CreatePost(Post post)
+        public async Task<bool> CreatePostAsync(Post post)
         {
             try
             {
-                _context.Posts.Add(post);
-                _context.SaveChanges();
+                await _context.Posts.AddAsync(post);
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
@@ -30,13 +31,13 @@ namespace EmployeePortal.Data.Repositories
             }
         }
 
-        public bool DeletePost(Guid id)
+        public async Task<bool> DeletePostAsync(Guid id)
         {
             try
             {
-                var post = _context.Posts.FirstOrDefault(p => p.Id == id);
+                var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == id);
                 _context.Posts.Remove(post);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
@@ -46,11 +47,11 @@ namespace EmployeePortal.Data.Repositories
             }
         }
 
-        public IEnumerable<Post> GetPostsPaged(int page, int pageSize)
+        public async Task<IEnumerable<Post>> GetPostsPagedAsync(int page, int pageSize)
         {
 
-            return _context.Posts
-                .OrderBy(p => p.DateOfPublishing)
+            return await _context.Posts
+                .OrderByDescending(p => p.DateOfPublishing)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(p => new Post
@@ -61,7 +62,7 @@ namespace EmployeePortal.Data.Repositories
                     Author = p.Author,
                     DateOfPublishing = p.DateOfPublishing,
                     ImageData = p.ImageData,
-                }).ToList();
+                }).ToListAsync();
         }
     }
 }
