@@ -1,14 +1,11 @@
 ﻿using EmployeePortal.Core.DTOs;
 using EmployeePortal.Core.Interfaces;
-using EmployeePortal.Core.Models;
 using EmployeePortal.ViewModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
-using System.Net.Mail;
 using System.Security.Claims;
 
 namespace EmployeePortal.Controllers
@@ -31,13 +28,13 @@ namespace EmployeePortal.Controllers
         [AllowAnonymous]
         [Route("SignInUsingUsernamePassword")]
         [ValidateAntiForgeryToken]
-        public IActionResult SignIn()
+        public async Task<IActionResult> SignIn()
         {
             var username = Request.Form["Username"].ToString();
             var password = Request.Form["Password"].ToString();
             var rememberMe = Request.Form["RememberMe"].ToString() == "on";
 
-            if(!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+            if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
             {
                 var dto = new UserDto()
                 {
@@ -45,12 +42,12 @@ namespace EmployeePortal.Controllers
                     Password = password
                 };
 
-                if (_employeeService.UserSignIn(dto))
+                if (await _employeeService.UserSignInAsync(dto))
                 {
-                    LogInAsync(dto);
+                    await LogInAsync(dto);
                     return Json(new { success = true, redirectUrl = Url.Action("Dashboard", "Dashboard") });
                 }
-            }            
+            }
 
             return Json(new { success = false, message = "Invalid username or password." });
         }
@@ -66,13 +63,13 @@ namespace EmployeePortal.Controllers
             var emailAddress = Request.Form["emailAddress"].ToString();
             var mobileNumber = Request.Form["mobileNumber"].ToString();
 
-            if(!string.IsNullOrEmpty(emailAddress))
+            if (!string.IsNullOrEmpty(emailAddress))
             {
                 var result = await _employeeService.GetUserByEmailAsync(emailAddress);
-                if(result != null)
+                if (result != null)
                 {
                     return Json(new { success = false, message = "No need to sign up twice, we've got you covered! Just sign in." });
-                }                
+                }
             }
 
             if (!string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(lastName) && !string.IsNullOrEmpty(emailAddress))
@@ -84,11 +81,11 @@ namespace EmployeePortal.Controllers
                     FirstName = firstName,
                     LastName = lastName,
                     EmailAddress = emailAddress,
-                    MobileNumber = mobileNumber,                    
+                    MobileNumber = mobileNumber,
                     Password = generatedPassword
                 };
 
-                if (_employeeService.UserSignUp(empDto))
+                if (await _employeeService.UserSignUpAsync(empDto))
                 {
                     string emailBody = string.Format("Your account has been set up in our system.\nLogin Details:\nUsername: {0}\nPassword: {1}", empDto.EmailAddress, generatedPassword);
                     _emailService.SendEmailUsingGmail(empDto.EmailAddress, "Your account has been setup. : Engage360", emailBody);
@@ -98,9 +95,9 @@ namespace EmployeePortal.Controllers
                         Username = empDto.EmailAddress,
                         Password = empDto.Password
                     };
-                    if (_employeeService.UserSignIn(userDto))
+                    if (await _employeeService.UserSignInAsync(userDto))
                     {
-                        LogInAsync(userDto);
+                        await LogInAsync(userDto);
                         return Json(new { success = true, redirectUrl = Url.Action("Dashboard", "Dashboard") });
                     }
                 }
@@ -122,13 +119,13 @@ namespace EmployeePortal.Controllers
         [HttpPost]
         [Route("New-Employee")]
         [ValidateAntiForgeryToken]
-        public IActionResult AddEmployee(EmployeeDto employeeDto, IFormFile imageUpload)
+        public async Task<IActionResult> AddEmployee(EmployeeDto employeeDto, IFormFile imageUpload)
         {
             if (imageUpload != null && imageUpload.Length > 0)
             {
                 using (var memoryStream = new MemoryStream())
                 {
-                    imageUpload.CopyToAsync(memoryStream);
+                    await imageUpload.CopyToAsync(memoryStream);
                     employeeDto.ProfilePicture = memoryStream.ToArray();
                 }
             }
@@ -141,7 +138,7 @@ namespace EmployeePortal.Controllers
 
             if (ModelState.IsValid)
             {
-                _employeeService.AddEmployee(employeeDto);
+                await _employeeService.AddEmployeeAsync(employeeDto);
                 string emailBody = string.Format("Your account has been set up in our system.\nLogin Details:\nUsername: {0}\nPassword: {1}", employeeDto.EmailAddress, generatedPassword);
                 _emailService.SendEmailUsingGmail(employeeDto.EmailAddress, "Your account has been setup. : Engage360", emailBody);
 
@@ -174,9 +171,9 @@ namespace EmployeePortal.Controllers
         // API endpoint for infinite scroll (AJAX call)
         [HttpGet]
         [Route("api/employees")]
-        public IActionResult GetEmployees(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetEmployees(int page = 1, int pageSize = 10)
         {
-            var employees = _employeeService.GetEmployeesPaged(page, pageSize);
+            var employees = await _employeeService.GetEmployeesPagedAsync(page, pageSize);
             return Json(employees);
         }
 
@@ -186,9 +183,9 @@ namespace EmployeePortal.Controllers
         {
             var model = new RoleMappingDto
             {
-                Roles = _employeeService.GetAllRoles(),
-                Employees = _employeeService.GetAllEmployees(),
-                Users = await _employeeService.GetAllUsers(),
+                Roles = await _employeeService.GetAllRolesAsync(),
+                Employees = await _employeeService.GetAllEmployeesAsync(),
+                Users = await _employeeService.GetAllUsersAsync(),
                 EmailAddress = string.Empty,
                 RoleName = string.Empty
             };
@@ -198,11 +195,11 @@ namespace EmployeePortal.Controllers
         [HttpPost]
         [Route("Modify-Role")]
         [ValidateAntiForgeryToken]
-        public IActionResult ModifyEmployeeRole([FromBody] RoleMappingDto data)
+        public async Task<IActionResult> ModifyEmployeeRole([FromBody] RoleMappingDto data)
         {
             if (data.EmailAddress != string.Empty && data.RoleName != string.Empty)
             {
-                if (_employeeService.ModifyEmployeeRole(data.EmailAddress, data.RoleName))
+                if (await _employeeService.ModifyEmployeeRoleAsync(data.EmailAddress, data.RoleName))
                 {
                     return Json(new { success = true });
                 }
@@ -212,9 +209,9 @@ namespace EmployeePortal.Controllers
 
         [HttpGet]
         [Route("Delete-Employee")]
-        public IActionResult DeleteEmployee()
+        public async Task<IActionResult> DeleteEmployee()
         {
-            return View(_employeeService.GetAllEmployees());
+            return View(await _employeeService.GetAllEmployeesAsync());
         }
 
         [HttpPost]
@@ -224,7 +221,7 @@ namespace EmployeePortal.Controllers
         {
             if (data.EmailAddress != string.Empty)
             {
-                if (await _employeeService.RemoveEmployee(data.EmailAddress))
+                if (await _employeeService.RemoveEmployeeAsync(data.EmailAddress))
                 {
                     if (data.EmailAddress == User.Identity.Name)
                     {
@@ -238,11 +235,11 @@ namespace EmployeePortal.Controllers
 
         [HttpGet]
         [Route("Update-Employee")]
-        public IActionResult UpdateEmployee()
+        public async Task<IActionResult> UpdateEmployee()
         {
             var model = new UpdateEmployeeViewModel
             {
-                Employees = _employeeService.GetAllEmployees(),
+                Employees = await _employeeService.GetAllEmployeesAsync(),
                 SelectedEmployee = new EmployeeDto()
             };
 
@@ -255,7 +252,7 @@ namespace EmployeePortal.Controllers
         [HttpPost]
         [Route("Update-Employee")]
         [ValidateAntiForgeryToken]
-        public IActionResult UpdateEmployee(UpdateEmployeeViewModel model, IFormFile imageUpload, string emailAddress)
+        public async Task<IActionResult> UpdateEmployee(UpdateEmployeeViewModel model, IFormFile imageUpload, string emailAddress)
         {
             model.SelectedEmployee.EmailAddress = emailAddress;
 
@@ -263,19 +260,19 @@ namespace EmployeePortal.Controllers
             {
                 using (var memoryStream = new MemoryStream())
                 {
-                    imageUpload.CopyToAsync(memoryStream);
+                    await imageUpload.CopyToAsync(memoryStream);
                     model.SelectedEmployee.ProfilePicture = memoryStream.ToArray();
                 }
             }
 
-            if (_employeeService.UpdateEmployeeDetails(model.SelectedEmployee, emailAddress))
+            if (await _employeeService.UpdateEmployeeDetailsAsync(model.SelectedEmployee, emailAddress))
             {
                 return RedirectToAction("Dashboard", "Dashboard");
             }
 
             var viewModel = new UpdateEmployeeViewModel
             {
-                Employees = _employeeService.GetAllEmployees(),
+                Employees = await _employeeService.GetAllEmployeesAsync(),
                 SelectedEmployee = model.SelectedEmployee
             };
 
@@ -290,13 +287,11 @@ namespace EmployeePortal.Controllers
         public async Task<IActionResult> HandleGoogleSignInUpAsync()
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
-            //var users = await _employeeService.GetAllUsers();
-            //var user = users.FirstOrDefault(u => u.Username == email);
             var user = await _employeeService.GetUserByEmailAsync(email);
 
             if (user != null)
             {
-                LogInAsync(user);
+                await LogInAsync(user);
                 return RedirectToAction("Dashboard", "Dashboard", new { auth = "google", status = "success" });
             }
             else
@@ -313,7 +308,7 @@ namespace EmployeePortal.Controllers
                     Password = generatedPassword
                 };
 
-                if (_employeeService.UserSignUp(employeeDto))
+                if (await _employeeService.UserSignUpAsync(employeeDto))
                 {
                     string emailBody = string.Format("Your account has been set up in our system.\nLogin Details:\nUsername: {0}\nPassword: {1}", employeeDto.EmailAddress, generatedPassword);
                     _emailService.SendEmailUsingGmail(employeeDto.EmailAddress, "Your account has been setup. : Engage360", emailBody);
@@ -323,9 +318,9 @@ namespace EmployeePortal.Controllers
                         Username = employeeDto.EmailAddress,
                         Password = employeeDto.Password
                     };
-                    if (_employeeService.UserSignIn(userDto))
+                    if (await _employeeService.UserSignInAsync(userDto))
                     {
-                        LogInAsync(userDto);
+                        await LogInAsync(userDto);
                         return RedirectToAction("Dashboard", "Dashboard", new { auth = "google", status = "success" });
                     }
                 }
@@ -333,11 +328,12 @@ namespace EmployeePortal.Controllers
             return RedirectToAction("Dashboard", "Dashboard");
         }
 
-        public async void LogInAsync(UserDto userDto)
+        public async Task LogInAsync(UserDto userDto)
         {
-            var users = await _employeeService.GetAllUsers();
+            var users = await _employeeService.GetAllUsersAsync();
             var user = users.FirstOrDefault(u => u.Username == userDto.Username);
-            var role = user != null ? _employeeService.GetAllRoles().FirstOrDefault(role => role.Id == user.RoleId) : null;
+            var roles = await _employeeService.GetAllRolesAsync();
+            var role = user != null && roles != null ? roles.FirstOrDefault(role => role.Id == user.RoleId) : null;
 
             var claims = new List<Claim>
             {

@@ -19,7 +19,7 @@ builder.Services.AddAuthentication(options =>
 })
 .AddCookie(options =>
 {
-    options.LoginPath = "/SignIn";
+    //options.LoginPath = "/SignIn";
     options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
 })
 .AddGoogle(options =>

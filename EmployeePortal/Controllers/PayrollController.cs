@@ -51,9 +51,9 @@ namespace EmployeePortal.Controllers
         }
 
         [HttpPost]
-        public JsonResult FilterEmployees(string department, DateTime? payPeriod)
+        public async Task<JsonResult> FilterEmployees(string department, DateTime? payPeriod)
         {
-            var employees = _employeeService.GetAllEmployees();
+            var employees = await _employeeService.GetAllEmployeesAsync();
 
             if (!string.IsNullOrEmpty(department))
                 employees = employees.Where(e => e.Department == department).ToList();
@@ -98,13 +98,13 @@ namespace EmployeePortal.Controllers
             return Json(new { success = false });
         }
 
-        public IActionResult DisplayPayroll()
+        public async Task<IActionResult> DisplayPayroll()
         {
             var viewModel = new PayrollPDFViewModel();
 
             if (TempData["UserEmail"] is string userEmail && TempData["Duration"] is string duration)
             {
-                viewModel.Employee = _employeeService.GetEmployeeDetails(userEmail);
+                viewModel.Employee = await _employeeService.GetEmployeeDetailsAsync(userEmail);
                 viewModel.Salary = _salaryService.GetEmployeeSalary(userEmail, duration);
             }
 
@@ -116,10 +116,10 @@ namespace EmployeePortal.Controllers
             return Content("Failed. !!!");
         }
 
-        public IActionResult PayrollPDF(string duration)
+        public async Task<IActionResult> PayrollPDF(string duration)
         {
             var userEmail = User.FindFirst(ClaimTypes.Name)?.Value;
-            var employee = _employeeService.GetEmployeeDetails(userEmail);
+            var employee = await _employeeService.GetEmployeeDetailsAsync(userEmail);
             var salary = _salaryService.GetEmployeeSalary(userEmail, duration);
 
             var viewModel = new PayrollPDFViewModel
