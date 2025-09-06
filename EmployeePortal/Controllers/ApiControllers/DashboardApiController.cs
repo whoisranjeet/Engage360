@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeePortal.Controllers.ApiControllers
 {
-    public class ApiController : Controller
+    public class DashboardApiController : Controller
     {
         private readonly IDashboardService _dashboardService;
 
-        public ApiController(IDashboardService dashboardService)
+        public DashboardApiController(IDashboardService dashboardService)
         {
             _dashboardService = dashboardService;
         }
