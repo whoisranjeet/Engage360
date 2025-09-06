@@ -5,18 +5,18 @@ namespace EmployeePortal.Core.Interfaces
 {
     public interface IEmployeeService
     {
-        bool UserSignIn(UserDto userDto);
-        bool UserSignUp(EmployeeDto employeeDto);
-        void AddEmployee(EmployeeDto employeeDto);
-        Guid GetDefaultRoleId(string defaultRoleName);
-        List<EmployeeDto> GetAllEmployees();
-        List<RoleDto> GetAllRoles();
-        Task<List<UserDto>> GetAllUsers();
+        Task<bool> UserSignInAsync(UserDto userDto);
+        Task<bool> UserSignUpAsync(EmployeeDto employeeDto);
+        Task AddEmployeeAsync(EmployeeDto employeeDto);
+        Task<Guid> GetDefaultRoleIdAsync(string defaultRoleName);
+        Task<List<EmployeeDto>> GetAllEmployeesAsync();
+        Task<List<RoleDto>> GetAllRolesAsync();
+        Task<List<UserDto>> GetAllUsersAsync();
         Task<UserDto> GetUserByEmailAsync(string email);
-        bool ModifyEmployeeRole(string EmailAddress, string RoleName);
-        Task<bool> RemoveEmployee(string EmailAddress);
-        EmployeeDto GetEmployeeDetails(string EmailAddress);
-        bool UpdateEmployeeDetails(EmployeeDto emp, string emailAddress);
-        IEnumerable<EmployeeDto> GetEmployeesPaged(int page, int pageSize);
+        Task<bool> ModifyEmployeeRoleAsync(string EmailAddress, string RoleName);
+        Task<bool> RemoveEmployeeAsync(string EmailAddress);
+        Task<EmployeeDto> GetEmployeeDetailsAsync(string EmailAddress);
+        Task<bool> UpdateEmployeeDetailsAsync(EmployeeDto emp, string emailAddress);
+        Task<IEnumerable<EmployeeDto>> GetEmployeesPagedAsync(int page, int pageSize);
     }
 }

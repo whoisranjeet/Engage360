@@ -1,5 +1,4 @@
 ﻿using EmployeePortal.Core.Interfaces;
-using EmployeePortal.Data.Data;
 using EmployeePortal.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +10,10 @@ namespace EmployeePortal.Controllers
     public class DashboardController : Controller
     {
         private readonly IDashboardService _dashboardService;
-        private readonly ApplicationDbContext _context;
 
-        public DashboardController(IDashboardService dashboardService, ApplicationDbContext context, IEmployeeService employeeService)
+        public DashboardController(IDashboardService dashboardService, IEmployeeService employeeService)
         {
             _dashboardService = dashboardService;
-            _context = context;
         }
 
         [HttpGet]
@@ -26,18 +23,9 @@ namespace EmployeePortal.Controllers
             return View();
         }
 
-        [HttpGet]
-        [Route("api/posts")]
-        [AllowAnonymous]
-        public IActionResult GetPosts(int page = 1, int pageSize = 10)
-        {
-            var employees = _dashboardService.GetPostsPaged(page, pageSize);
-            return Json(employees);
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreatePost(LayoutViewModel viewModel)
+        public async Task<IActionResult> CreatePost(CreatePostViewModel viewModel)
         {
             if (viewModel.Image != null && viewModel.Image.Length > 0)
             {
@@ -49,7 +37,7 @@ namespace EmployeePortal.Controllers
             viewModel.Post.Author = User.FindFirst(ClaimTypes.Name)?.Value;
             viewModel.Post.DateOfPublishing = DateTime.Now;
 
-            if (_dashboardService.CreatePost(viewModel.Post))
+            if (await _dashboardService.CreatePostAsync(viewModel.Post))
             {
                 return Json(new
                 {
@@ -68,19 +56,6 @@ namespace EmployeePortal.Controllers
             return BadRequest(new { success = false, message = "Could not create post." });
         }
 
-        [HttpPost]
-        public IActionResult DeletePost(Guid id)
-        {
-            bool isDeleted = _dashboardService.DeletePost(id);
-
-            if (isDeleted)
-            {
-                return Json(new { success = true });
-            }
-
-            return BadRequest(new { success = false, message = "Could not delete post." });
-        }
-
         [HttpGet]
         [AllowAnonymous]
         [Route("Contact")]        
@@ -88,14 +63,5 @@ namespace EmployeePortal.Controllers
         {
             return View();
         }
-
-        //[HttpPost]
-        //[AllowAnonymous]
-        //[Route("Contact")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> ContactUs(ContactUsViewModel viewModel)
-        //{
-        //    return View();
-        //}
     }
 }

@@ -16,7 +16,7 @@ namespace EmployeePortal.Services.Services
             _logger = logger;
         }
 
-        public bool CreatePost(PostDto postDto)
+        public async Task<bool> CreatePostAsync(PostDto postDto)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace EmployeePortal.Services.Services
                     DateOfPublishing = postDto.DateOfPublishing
                 };
 
-                _dashboardRepository.CreatePost(post);
+                await _dashboardRepository.CreatePostAsync(post);
                 return true;
             }
             catch (Exception ex)
@@ -39,11 +39,11 @@ namespace EmployeePortal.Services.Services
             }
         }
 
-        public bool DeletePost(Guid id)
+        public async Task<bool> DeletePostAsync(Guid id)
         {
             try
             {
-                _dashboardRepository.DeletePost(id);
+                await _dashboardRepository.DeletePostAsync(id);
                 return true;
             }
             catch (Exception ex)
@@ -53,9 +53,9 @@ namespace EmployeePortal.Services.Services
             }
         }
 
-        public IEnumerable<PostDto> GetPostsPaged(int page, int pageSize)
+        public async Task<IEnumerable<PostDto>> GetPostsPagedAsync(int page, int pageSize)
         {
-            var posts = _dashboardRepository.GetPostsPaged(page, pageSize);
+            var posts = await _dashboardRepository.GetPostsPagedAsync(page, pageSize);
             
             return posts.Select(p => new PostDto
             {

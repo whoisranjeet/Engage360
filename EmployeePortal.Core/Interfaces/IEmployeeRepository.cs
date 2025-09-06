@@ -5,18 +5,18 @@ namespace EmployeePortal.Core.Interfaces
 {
     public interface IEmployeeRepository
     {
-        bool UserSignIn(User user);
-        bool UserSignUp(Employee employee);
-        void AddEmployee(Employee employee);
-        Guid GetDefaultRoleId(string defaultRoleName);
-        List<Employee> GetAllEmployees();
-        List<Role> GetAllRoles();
-        Task<List<User>> GetAllUsers();
+        Task<bool> UserSignInAsync(User user);
+        Task<bool> UserSignUpAsync(Employee employee);
+        Task AddEmployeeAsync(Employee employee);
+        Task<Guid> GetDefaultRoleIdAsync(string defaultRoleName);
+        Task<List<Employee>> GetAllEmployeesAsync();
+        Task<List<Role>> GetAllRolesAsync();
+        Task<List<User>> GetAllUsersAsync();
         Task<User> GetUserByEmailAsync(string email);
-        bool ModifyEmployeeRole(string EmailAddress, string RoleName);
-        Task<bool> RemoveEmployee(string EmailAddress);
-        Employee GetEmployeeDetails(string EmailAddress);
-        bool UpdateEmployeeDetails(Employee emp, string emailAddress);
-        IEnumerable<Employee> GetEmployeesPaged(int page, int pageSize);
+        Task<bool> ModifyEmployeeRoleAsync(string EmailAddress, string RoleName);
+        Task<bool> RemoveEmployeeAsync(string EmailAddress);
+        Task<Employee> GetEmployeeDetailsAsync(string EmailAddress);
+        Task<bool> UpdateEmployeeDetailsAsync(Employee emp, string emailAddress);
+        Task<IEnumerable<Employee>> GetEmployeesPagedAsync(int page, int pageSize);
     }
 }

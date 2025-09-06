@@ -13,21 +13,21 @@ namespace EmployeePortal.Services.Services
             _employeeRepository = employeeRepository;
         }
 
-        public bool UserSignIn(UserDto userDto)
+        public async Task<bool> UserSignInAsync(UserDto userDto)
         {
             var user = new User
             {
                 Username = userDto.Username,
                 Password = userDto.Password
             };
-            if (_employeeRepository.UserSignIn(user))
+            if (await _employeeRepository.UserSignInAsync(user))
             {
                 return true;
             }
             return false;
         }
 
-        public bool UserSignUp(EmployeeDto employeeDto)
+        public async Task<bool> UserSignUpAsync(EmployeeDto employeeDto)
         {
             var employee = new Employee
             {
@@ -43,17 +43,17 @@ namespace EmployeePortal.Services.Services
                 {
                     Username = employeeDto.EmailAddress,
                     Password = employeeDto.Password,
-                    RoleId = GetDefaultRoleId("Associate")
+                    RoleId = await GetDefaultRoleIdAsync("Associate")
                 }
             };
-            if (_employeeRepository.UserSignUp(employee))
+            if (await _employeeRepository.UserSignUpAsync(employee))
             {
                 return true;
             }
             return false;
         }
 
-        public void AddEmployee(EmployeeDto employeeDto)
+        public async Task AddEmployeeAsync(EmployeeDto employeeDto)
         {
             var employee = new Employee
             {
@@ -69,20 +69,20 @@ namespace EmployeePortal.Services.Services
                 {
                     Username = employeeDto.EmailAddress,
                     Password = employeeDto.Password,
-                    RoleId = GetDefaultRoleId("Associate")
+                    RoleId = await GetDefaultRoleIdAsync("Associate")
                 }
             };
-            _employeeRepository.AddEmployee(employee);
+            await _employeeRepository.AddEmployeeAsync(employee);
         }
 
-        public Guid GetDefaultRoleId(string defaultRoleName)
+        public async Task<Guid> GetDefaultRoleIdAsync(string defaultRoleName)
         {
-            return _employeeRepository.GetDefaultRoleId(defaultRoleName);
+            return await _employeeRepository.GetDefaultRoleIdAsync(defaultRoleName);
         }
 
-        public List<EmployeeDto> GetAllEmployees()
+        public async Task<List<EmployeeDto>> GetAllEmployeesAsync()
         {
-            var employees = _employeeRepository.GetAllEmployees();
+            var employees = await _employeeRepository.GetAllEmployeesAsync();
 
             var employeeDtos = employees.Select(employee => new EmployeeDto
             {
@@ -102,9 +102,9 @@ namespace EmployeePortal.Services.Services
             return employeeDtos;
         }
 
-        public List<RoleDto> GetAllRoles()
+        public async Task<List<RoleDto>> GetAllRolesAsync()
         {
-            var roles = _employeeRepository.GetAllRoles();
+            var roles = await _employeeRepository.GetAllRolesAsync();
 
             var rolesDtos = roles.Select(role => new RoleDto
             {
@@ -115,9 +115,9 @@ namespace EmployeePortal.Services.Services
             return rolesDtos;
         }
 
-        public async Task<List<UserDto>> GetAllUsers()
+        public async Task<List<UserDto>> GetAllUsersAsync()
         {
-            var users = await _employeeRepository.GetAllUsers();
+            var users = await _employeeRepository.GetAllUsersAsync();
 
             var usersDtos = users.Select(user => new UserDto
             {
@@ -139,27 +139,27 @@ namespace EmployeePortal.Services.Services
             return userDto;
         }
 
-        public bool ModifyEmployeeRole(string EmailAddress, string RoleName)
+        public async Task<bool> ModifyEmployeeRoleAsync(string EmailAddress, string RoleName)
         {
-            if (_employeeRepository.ModifyEmployeeRole(EmailAddress, RoleName))
+            if (await _employeeRepository.ModifyEmployeeRoleAsync(EmailAddress, RoleName))
             {
                 return true;
             }
             return false;
         }
 
-        public async Task<bool> RemoveEmployee(string EmailAddress)
+        public async Task<bool> RemoveEmployeeAsync(string EmailAddress)
         {
-            if (await _employeeRepository.RemoveEmployee(EmailAddress))
+            if (await _employeeRepository.RemoveEmployeeAsync(EmailAddress))
             {
                 return true;
             }
             return false;
         }
 
-        public EmployeeDto GetEmployeeDetails(string EmailAddress)
+        public async Task<EmployeeDto> GetEmployeeDetailsAsync(string EmailAddress)
         {
-            var employee = _employeeRepository.GetEmployeeDetails(EmailAddress);
+            var employee = await _employeeRepository.GetEmployeeDetailsAsync(EmailAddress);
             var employeeDto = new EmployeeDto
             {
                 FirstName = employee.FirstName,
@@ -175,7 +175,7 @@ namespace EmployeePortal.Services.Services
             return employeeDto;
         }
 
-        public bool UpdateEmployeeDetails(EmployeeDto emp, string emailAddress)
+        public async Task<bool> UpdateEmployeeDetailsAsync(EmployeeDto emp, string emailAddress)
         {
             var employee = new Employee
             {
@@ -190,7 +190,7 @@ namespace EmployeePortal.Services.Services
                 Salary = emp.Salary
             };
 
-            if (_employeeRepository.UpdateEmployeeDetails(employee, emailAddress))
+            if (await _employeeRepository.UpdateEmployeeDetailsAsync(employee, emailAddress))
             {
                 return true;
             }
@@ -198,9 +198,9 @@ namespace EmployeePortal.Services.Services
             return false;
         }
 
-        public IEnumerable<EmployeeDto> GetEmployeesPaged(int page, int pageSize)
+        public async Task<IEnumerable<EmployeeDto>> GetEmployeesPagedAsync(int page, int pageSize)
         {
-            var emp = _employeeRepository.GetEmployeesPaged(page, pageSize);
+            var emp = await _employeeRepository.GetEmployeesPagedAsync(page, pageSize);
 
             return emp.Select(e => new EmployeeDto
             {

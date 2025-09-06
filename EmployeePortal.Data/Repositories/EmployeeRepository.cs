@@ -1,5 +1,4 @@
-﻿using EmployeePortal.Core.DTOs;
-using EmployeePortal.Core.Interfaces;
+﻿using EmployeePortal.Core.Interfaces;
 using EmployeePortal.Core.Models;
 using EmployeePortal.Data.Data;
 using Microsoft.EntityFrameworkCore;
@@ -17,34 +16,38 @@ namespace EmployeePortal.Data.Repositories
             _context = context;
             _logger = logger;
         }
-        public bool UserSignIn(User user)
+        public async Task<bool> UserSignInAsync(User user)
         {
-            if (_context.Users.FirstOrDefault(obj => obj.Username == user.Username && obj.Password == user.Password) != null)
+            if (await _context.Users.FirstOrDefaultAsync(obj => obj.Username == user.Username && obj.Password == user.Password) != null)
             {
                 return true;
             }
             return false;
         }
 
-        public bool UserSignUp(Employee employee)
+        public async Task<bool> UserSignUpAsync(Employee employee)
         {
-            _context.Employees.Add(employee);
-            _context.SaveChanges();
+            await _context.Employees.AddAsync(employee);
+            await _context.SaveChangesAsync();
             return true;
         }
 
-        public void AddEmployee(Employee employee)
+        public async Task AddEmployeeAsync(Employee employee)
         {
-            _context.Employees.Add(employee);
-            _context.SaveChanges();
+            await _context.Employees.AddAsync(employee);
+            await _context.SaveChangesAsync();
         }
 
-        public Guid GetDefaultRoleId(string defaultRoleName)
+        public async Task<Guid> GetDefaultRoleIdAsync(string defaultRoleName)
         {
             Guid roleId = new();
             try
             {
-                roleId = _context.Roles.FirstOrDefault(obj => obj.RoleName == defaultRoleName).Id;
+                var role = await _context.Roles.FirstOrDefaultAsync(obj => obj.RoleName == defaultRoleName);
+                if (role != null)
+                {
+                    roleId = role.Id;
+                }
             }
             catch (Exception ex)
             {
@@ -53,17 +56,17 @@ namespace EmployeePortal.Data.Repositories
             return roleId;
         }
 
-        public List<Employee> GetAllEmployees()
+        public async Task<List<Employee>> GetAllEmployeesAsync()
         {
-            return _context.Employees.ToList();
+            return await _context.Employees.ToListAsync();
         }
 
-        public List<Role> GetAllRoles()
+        public async Task<List<Role>> GetAllRolesAsync()
         {
-            return _context.Roles.ToList();
+            return await _context.Roles.ToListAsync();
         }
 
-        public async Task<List<User>> GetAllUsers()
+        public async Task<List<User>> GetAllUsersAsync()
         {
             return await _context.Users.ToListAsync();
         }
@@ -73,19 +76,19 @@ namespace EmployeePortal.Data.Repositories
             return await _context.Users.FirstOrDefaultAsync(u => u.Username.ToLower() == email.ToLower());
         }
 
-        public bool ModifyEmployeeRole(string EmailAddress, string RoleName)
+        public async Task<bool> ModifyEmployeeRoleAsync(string EmailAddress, string RoleName)
         {
             try
             {
-                var user = _context.Users.FirstOrDefault(user => user.Username == EmailAddress);
-                var role = _context.Roles.FirstOrDefault(role => role.RoleName == RoleName);
+                var user = await _context.Users.FirstOrDefaultAsync(user => user.Username == EmailAddress);
+                var role = await _context.Roles.FirstOrDefaultAsync(role => role.RoleName == RoleName);
 
                 if (user != null && role != null)
                 {
                     user.RoleId = role.Id;
                 }
                 _context.Users.Update(user);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 return true;
             }
@@ -96,12 +99,12 @@ namespace EmployeePortal.Data.Repositories
             }
         }
 
-        public async Task<bool> RemoveEmployee(string EmailAddress)
+        public async Task<bool> RemoveEmployeeAsync(string EmailAddress)
         {
             try
             {
                 var employee = await _context.Employees.FirstOrDefaultAsync(emp => emp.EmailAddress == EmailAddress);
-                var user = _context.Users.FirstOrDefault(user => user.Username == EmailAddress);
+                var user = await _context.Users.FirstOrDefaultAsync(user => user.Username == EmailAddress);
                 if (employee != null && user != null)
                 {
                     _context.Employees.Remove(employee);
@@ -117,9 +120,9 @@ namespace EmployeePortal.Data.Repositories
             }
         }
 
-        public Employee GetEmployeeDetails(string emailAddress)
+        public async Task<Employee> GetEmployeeDetailsAsync(string emailAddress)
         {
-            var employee = _context.Employees.FirstOrDefault(emp => emp.EmailAddress == emailAddress);
+            var employee = await _context.Employees.FirstOrDefaultAsync(emp => emp.EmailAddress == emailAddress);
 
             if (employee != null)
             {
@@ -129,11 +132,11 @@ namespace EmployeePortal.Data.Repositories
             return new Employee { };
         }
 
-        public bool UpdateEmployeeDetails(Employee emp, string emailAddress)
+        public async Task<bool> UpdateEmployeeDetailsAsync(Employee emp, string emailAddress)
         {
             try
             {
-                var employee = _context.Employees.FirstOrDefault(emp => emp.EmailAddress == emailAddress);
+                var employee = await _context.Employees.FirstOrDefaultAsync(emp => emp.EmailAddress == emailAddress);
 
                 employee.FirstName = emp.FirstName;
                 employee.LastName = emp.LastName;
@@ -149,7 +152,7 @@ namespace EmployeePortal.Data.Repositories
                 }
 
                 _context.Employees.Update(employee);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 return true;
             }
@@ -160,9 +163,9 @@ namespace EmployeePortal.Data.Repositories
             }
         }
 
-        public IEnumerable<Employee> GetEmployeesPaged(int page, int pageSize)
+        public async Task<IEnumerable<Employee>> GetEmployeesPagedAsync(int page, int pageSize)
         {
-            return _context.Employees
+            return await _context.Employees
                .OrderBy(e => e.FirstName)
                .Skip((page - 1) * pageSize)
                .Take(pageSize)
@@ -176,7 +179,7 @@ namespace EmployeePortal.Data.Repositories
                    MobileNumber = e.MobileNumber,
                    Address = e.Address,
                    Department = e.Department
-               }).ToList();
+               }).ToListAsync();
         }
     }
 }
