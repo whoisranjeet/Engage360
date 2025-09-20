@@ -14,16 +14,11 @@
     }
 });
 
-function showSignInSuccess() {
-    Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'success',
-        title: 'Signed in successfully',
-        showConfirmButton: false,
-        timer: 1500,
-        timerProgressBar: true
-    });
+// jQuery: Convert to true sentence case
+function toSentenceCase(text) {
+    if (!text) return "";
+    text = text.trim();
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 }
 
 // Function to display the comingSoonPopup
@@ -36,11 +31,49 @@ function closePopup() {
     document.getElementById("comingSoonPopup").style.display = "none";
 }
 
-// jQuery: Convert to true sentence case
-function toSentenceCase(text) {
-    if (!text) return "";
-    text = text.trim();
-    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+function showSignInSuccess() {
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Signed in successfully',
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true
+    });
+}
+
+function showErrorPopup(message) {
+    Swal.fire({
+        icon: 'error',
+        title: 'Sign in failed',
+        text: message,
+        confirmButtonText: 'Try Again',
+        confirmButtonColor: '#d33'
+    });
+}
+
+function signUpErrorPopup(message) {
+    Swal.fire({
+        icon: 'error',
+        title: 'Account already exists',
+        text: message,
+        confirmButtonText: 'Try Again',
+        confirmButtonColor: '#d33'
+    });
+}
+
+function confirmDelete() {
+    return Swal.fire({
+        icon: 'warning',
+        title: 'Are you sure?',
+        text: "This action cannot be undone!",
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33'
+    });
 }
 
 $(function () {
@@ -177,16 +210,6 @@ $(function () {
         });
     });
 
-    function showErrorPopup(message) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Sign in failed',
-            text: message,
-            confirmButtonText: 'Try Again',
-            confirmButtonColor: '#d33'
-        });
-    }
-
     //sign up using user form - ajax call
 
     $("#signup-form").on("submit", function (e) {
@@ -213,26 +236,38 @@ $(function () {
         });
     });
 
-    function signUpErrorPopup(message) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Account already exists',
-            text: message,
-            confirmButtonText: 'Try Again',
-            confirmButtonColor: '#d33'
-        });
-    }
+    $("#contactUsForm").on("submit", function (e) {
+        e.preventDefault(); // prevent normal page reload
 
-    function confirmDelete() {
-        return Swal.fire({
-            icon: 'warning',
-            title: 'Are you sure?',
-            text: "This action cannot be undone!",
-            showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'No, cancel!',
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33'
+        $.ajax({
+            url: '/CreateEnquiry', 
+            type: 'POST',
+            data: $(this).serialize(), // includes anti-forgery token + form fields
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message,
+                        confirmButtonColor: '#3085d6'
+                    });
+                    $("#contactUsForm")[0].reset();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: response.message || "Something went wrong, please try again."
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Server Error',
+                    text: 'Please try again later.'
+                });
+            }
         });
-    }
+    });  
 });
