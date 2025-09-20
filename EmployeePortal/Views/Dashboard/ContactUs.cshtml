@@ -1,16 +1,16 @@
-﻿@model EmployeePortal.ViewModel.ContactUsViewModel
+﻿@model EmployeePortal.ViewModel.ContactViewModel
 
 <div class="inner-container">
     <div class="contact-container w-75">
         <h2>Contact Us</h2>
         <p>Have questions or feedback? We’d love to hear from you!</p>
-        <form>
+        <form id="contactUsForm" method="post" enctype="multipart/form-data">
             @Html.AntiForgeryToken()
             <div class="form-group">
                 <input asp-for="Name" type="text" class="form-control" id="name" placeholder="Your Name">
             </div>
             <div class="form-group">
-                <input asp-for="Name" type ="email" class="form-control" id="email" placeholder="Your Email">
+                <input asp-for="Email" type ="email" class="form-control" id="email" placeholder="Your Email">
             </div>
             <div class="form-group">
                 <input asp-for=Phone type ="tel" class="form-control" id="phone" placeholder="Your Phone">
@@ -18,7 +18,7 @@
             <div class="form-group">
                 <textarea asp-for=Message id="message" class="form-control" placeholder="Your Message"></textarea>
             </div>
-            <button type="submit" class="btn" onclick="showComingSoonPopup()">Send Message</button>
+            <button type="submit" class="btn" >Send Message</button>
         </form>
 
         <div class="social-icons mt-4">

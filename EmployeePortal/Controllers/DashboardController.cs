@@ -63,5 +63,14 @@ namespace EmployeePortal.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("CreateEnquiry")]
+        [ValidateAntiForgeryToken]
+        public IActionResult ContactUs(ContactViewModel viewModel)
+        {
+            return Json(new { success = true, message = "Enquiry posted!" });
+        }
     }
 }
